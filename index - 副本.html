@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Daniel - 技术分享个人网页</title>
+  <link rel="shortcut icon" href="./assets/img/head.jpg">
+
+  <!-- Bootstrap CSS (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/css/bootstrap.min.css">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== 全局样式 ===== */
+    :root {
+      --primary-color: #6366f1;
+      --secondary-color: #8b5cf6;
+      --accent-color: #06b6d4;
+      --dark-bg: #0f172a;
+      --text-primary: #1e293b;
+      --text-secondary: #64748b;
+      --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-md: 0 4px 6px rgba(0,0,0,0.07), 0 10px 15px rgba(0,0,0,0.05);
+      --shadow-lg: 0 10px 25px rgba(0,0,0,0.1), 0 20px 40px rgba(0,0,0,0.06);
+      --radius: 16px;
+      --radius-sm: 8px;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text-primary);
+      background: #f8fafc;
+      line-height: 1.7;
+    }
+
+    /* ===== 导航栏 ===== */
+    .blog-header {
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(226,232,240,0.6);
+      position: sticky;
+      top: 0;
+      z-index: 1020;
+    }
+
+    .blog-header-logo {
+      font-family: 'Playfair Display', serif;
+      font-weight: 900;
+      font-size: 1.8rem;
+      background: var(--gradient-1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-scroller .nav a {
+      color: var(--text-secondary) !important;
+      font-weight: 500;
+      font-size: 0.875rem;
+      letter-spacing: 0.025em;
+      transition: all 0.3s ease;
+      padding: 0.5rem 1rem !important;
+      border-radius: var(--radius-sm);
+    }
+
+    .nav-scroller .nav a:hover {
+      color: var(--primary-color) !important;
+      background: rgba(99,102,241,0.06);
+    }
+
+    /* ===== Jumbotron ===== */
+    .jumbotron {
+      background: var(--gradient-1) !important;
+      border-radius: var(--radius) !important;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .jumbotron a.text-white {
+      display: inline-block;
+      padding: 0.375rem 1.25rem;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-radius: 9999px;
+      transition: all 0.3s ease;
+      font-size: 0.875rem;
+    }
+
+    .jumbotron a.text-white:hover {
+      background: rgba(255,255,255,0.15);
+      border-color: rgba(255,255,255,0.5);
+      text-decoration: none;
+    }
+
+    /* ===== 卡片 ===== */
+    .card-feature {
+      background: #fff;
+      border: 1px solid rgba(226,232,240,0.8) !important;
+      border-radius: var(--radius) !important;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .card-feature:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(99,102,241,0.2) !important;
+    }
+
+    .card-feature .text-primary {
+      color: var(--primary-color) !important;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    .card-feature .text-success {
+      color: var(--accent-color) !important;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    /* ===== 文章区 ===== */
+    .blog-main h3.font-italic {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      position: relative;
+      padding-bottom: 0.75rem;
+    }
+
+    .blog-main h3.font-italic::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: var(--gradient-1);
+      border-radius: 2px;
+    }
+
+    .blog-post {
+      background: #fff;
+      border-radius: var(--radius);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(226,232,240,0.6);
+    }
+
+    .blog-post-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    /* ===== 侧边栏 ===== */
+    .blog-sidebar .bg-light {
+      background: #fff !important;
+      border: 1px solid rgba(226,232,240,0.6);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .blog-sidebar h4 {
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 1rem;
+    }
+
+    .blog-sidebar a {
+      color: var(--text-secondary);
+      transition: all 0.3s ease;
+    }
+
+    .blog-sidebar a:hover {
+      color: var(--primary-color);
+      text-decoration: none;
+      padding-left: 4px;
+    }
+
+    /* ===== 页脚 ===== */
+    .blog-footer {
+      background: var(--dark-bg);
+      color: rgba(255,255,255,0.65);
+      padding: 2.5rem 1rem;
+      margin-top: 3rem;
+    }
+
+    .blog-footer a {
+      color: rgba(255,255,255,0.85);
+      font-weight: 500;
+    }
+
+    .blog-footer a:hover {
+      color: var(--accent-color);
+      text-decoration: none;
+    }
+
+    /* ===== 响应式 ===== */
+    @media (max-width: 767.98px) {
+      .blog-post { padding: 1.25rem; }
+      .blog-post-title { font-size: 1.35rem; }
+      .jumbotron { padding: 2rem 1.5rem !important; }
+      .jumbotron h1 { font-size: 1.75rem; }
+      .card-feature .col-auto { display: none !important; }
+      .blog-header-logo { font-size: 1.4rem; }
+    }
+
+    /* ===== SVG 占位 ===== */
+    .bd-placeholder-img text {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="blog-header py-3">
+      <div class="row flex-nowrap justify-content-between align-items-center">
+        <div class="col-4 pt-1"></div>
+        <div class="col-4 text-center">
+          <a class="blog-header-logo text-dark" href="#">Daniel</a>
+        </div>
+        <div class="col-4 d-flex justify-content-end align-items-center">
+          <a class="text-muted" href="#" aria-label="Search">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img" viewBox="0 0 24 24" focusable="false">
+              <title>搜索</title>
+              <circle cx="10.5" cy="10.5" r="7.5"/>
+              <path d="M21 21l-5.2-5.2"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <div class="nav-scroller py-1 mb-2">
+      <nav class="nav d-flex justify-content-between">
+        <a class="p-2 text-muted" href="./articles/CPP/categories_cpp.html">C/C++</a>
+        <a class="p-2 text-muted" href="#">C#</a>
+        <a class="p-2 text-muted" href="./articles/QT/categories_qt.html">QT</a>
+        <a class="p-2 text-muted" href="#">Unity3D</a>
+        <a class="p-2 text-muted" href="#">Unreal Engine4</a>
+      </nav>
+    </div>
+
+    <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
+      <div class="col-md-6 px-0">
+        <h1 class="display-4 font-italic">技术分享个人网页</h1>
+        <p class="lead my-3">这是一个放一些技术文章的树洞</p>
+        <p class="lead mb-0"><a href="#" class="text-white font-weight-bold">被你发现了。。。</a></p>
+      </div>
+    </div>
+
+    <div class="row mb-2">
+      <div class="col-md-6">
+        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative card-feature">
+          <div class="col p-4 d-flex flex-column position-static">
+            <strong class="d-inline-block mb-2 text-primary">诗人</strong>
+            <h3 class="mb-0">屈原</h3>
+            <div class="mb-1 text-muted">约公元前340—公元前278年</div>
+            <p class="card-text mb-auto">中国战国时期楚国诗人、政治家。楚国郢都被秦军攻破后，自沉于汨罗江，以身殉楚国。</p>
+            <a href="https://baike.baidu.com/item/%E5%B1%88%E5%8E%9F/6109?fr=aladdin" class="stretched-link">更多 →</a>
+          </div>
+          <div class="col-auto d-none d-lg-block">
+            <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="占位: 缩略图">
+              <defs>
+                <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grad)"/>
+              <text x="50%" y="45%" fill="rgba(255,255,255,0.9)" dy=".3em" text-anchor="middle" font-size="18">高山</text>
+              <text x="50%" y="65%" fill="rgba(255,255,255,0.7)" dy=".3em" text-anchor="middle" font-size="14">仰止</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="row no-gutters border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative card-feature">
+          <div class="col p-4 d-flex flex-column position-static">
+            <strong class="d-inline-block mb-2 text-success">游戏制作人</strong>
+            <h3 class="mb-0">徐昌隆</h3>
+            <div class="mb-1 text-muted">1968年 01月12日</div>
+            <p class="mb-auto">河洛三部曲之父<br>《金庸群侠传》《武林群侠传》《三国群侠传》</p>
+            <a href="https://baike.baidu.com/item/%E5%BE%90%E6%98%8C%E9%9A%86/8294268?fr=aladdin" class="stretched-link">更多 →</a>
+          </div>
+          <div class="col-auto d-none d-lg-block">
+            <svg class="bd-placeholder-img" width="200" height="250" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="占位: 缩略图">
+              <defs>
+                <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#f093fb;stop-opacity:1" />
+                  <stop offset="100%" style="stop-color:#f5576c;stop-opacity:1" />
+                </linearGradient>
+              </defs>
+              <rect width="100%" height="100%" fill="url(#grad2)"/>
+              <text x="50%" y="45%" fill="rgba(255,255,255,0.9)" dy=".3em" text-anchor="middle" font-size="18">景行</text>
+              <text x="50%" y="65%" fill="rgba(255,255,255,0.7)" dy=".3em" text-anchor="middle" font-size="14">行止</text>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <main role="main" class="container">
+    <div class="row">
+      <div class="col-md-8 blog-main">
+        <h3 class="pb-4 mb-4 font-italic border-bottom">美文赏析</h3>
+        <div class="blog-post">
+          <h2 class="blog-post-title">离骚</h2>
+          <p class="blog-post-meta">先秦时期 by <a href="#">屈原</a></p>
+          <p>史家之绝唱，无韵之离骚</p>
+          <hr>
+          <p>帝高阳之苗裔兮，朕皇考曰伯庸。<br>摄提贞于孟陬兮，惟庚寅吾以降。<br>皇览揆余初度兮，肇锡余以嘉名。<br>名余曰正则兮，字余曰灵均。</p>
+          <p>……（此处省略其余《离骚》全文，你可自行补充）</p>
+        </div>
+      </div>
+
+      <aside class="col-md-4 blog-sidebar">
+        <div class="p-4 mb-3 bg-light rounded">
+          <h4 class="font-italic">📌 关于</h4>
+          <p class="mb-0">文章来自互联网和个人编写，如有侵犯到你的利益，请联系我邮箱:<br><a href="mailto:enhot520@126.com" style="color: #6366f1;">enhot520@126.com</a></p>
+        </div>
+        <div class="p-4">
+          <h4 class="font-italic">📂 分类</h4>
+          <ol class="list-unstyled mb-0">
+            <li><a href="#">C/C++</a></li>
+            <li><a href="#">C#</a></li>
+            <li><a href="#">QT</a></li>
+            <li><a href="#">Unity3D</a></li>
+            <li><a href="#">Unreal Engine4</a></li>
+          </ol>
+        </div>
+        <div class="p-4">
+          <h4 class="font-italic">🔗 其他网站</h4>
+          <ol class="list-unstyled">
+            <li><a href="https://www.baidu.com/">百度</a></li>
+            <li><a href="https://www.bilibili.com/">B站</a></li>
+            <li><a href="https://github.com/">GitHub</a></li>
+          </ol>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="blog-footer text-center">
+    <p>🚀 感谢 <a href="https://getbootstrap.com/">Bootstrap</a> 提供的模板</p>
+    <p><a href="https://github.com/Danielswp">Daniel</a> © 2020 · Made with ❤️</p>
+  </footer>
+
+  <!-- 只需要 Bootstrap 的 JS（用于某些组件） -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+</body>
+</html>
