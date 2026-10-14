@@ -1,0 +1,75 @@
+/* ============================================================
+   Daniel Blog - 响应式样式
+   ============================================================ */
+
+/* ===== 平板 (≥576px, <992px) ===== */
+@media (min-width: 576px) and (max-width: 991.98px) {
+  .jumbotron h1 {
+    font-size: 2.5rem;
+  }
+  .h-md-250 {
+    min-height: 220px;
+  }
+}
+
+/* ===== 手机 (<768px) ===== */
+@media (max-width: 767.98px) {
+  /* 文章区 */
+  .blog-post {
+    padding: 1.25rem;
+  }
+  .blog-post-title {
+    font-size: 1.35rem;
+  }
+
+  /* Jumbotron */
+  .jumbotron {
+    padding: 2rem 1.5rem !important;
+  }
+  .jumbotron h1 {
+    font-size: 1.75rem;
+  }
+
+  /* 卡片 */
+  .card-feature .col-auto {
+    display: none !important;
+  }
+  .h-md-250 {
+    min-height: auto;
+  }
+
+  /* 头部 */
+  .blog-header-logo {
+    font-size: 1.4rem;
+  }
+
+  /* 导航 */
+  .nav-scroller .nav a {
+    font-size: 0.8125rem;
+    padding: 0.4rem 0.75rem !important;
+  }
+
+  /* 侧边栏 */
+  .blog-sidebar .p-4:last-child {
+    margin-bottom: 1rem;
+  }
+
+  /* 页脚 */
+  .blog-footer {
+    padding: 1.5rem 1rem;
+  }
+}
+
+/* ===== 中等屏幕 (≥768px, <1200px) ===== */
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .h-md-250 {
+    min-height: 260px;
+  }
+}
+
+/* ===== 大屏幕 (≥1200px) ===== */
+@media (min-width: 1200px) {
+  .h-md-250 {
+    min-height: 280px;
+  }
+}

@@ -1,0 +1,94 @@
+/* ============================================================
+   Daniel Blog - 头部 & 导航样式
+   ============================================================ */
+
+/* ===== 顶部导航栏 ===== */
+.blog-header {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(226,232,240,0.6);
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  transition: all 0.3s ease;
+}
+
+.blog-header-logo {
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 1.8rem;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: transform 0.3s ease;
+}
+
+.blog-header-logo:hover {
+  transform: scale(1.02);
+}
+
+/* 搜索按钮 */
+.blog-header a.text-muted {
+  transition: opacity 0.3s, color 0.3s;
+}
+
+.blog-header a.text-muted:hover {
+  opacity: 0.7;
+  color: var(--primary-color) !important;
+}
+
+/* ===== 导航链接 ===== */
+.nav-scroller {
+  background: transparent;
+}
+
+.nav-scroller .nav a {
+  color: var(--text-secondary) !important;
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.025em;
+  position: relative;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem !important;
+  border-radius: var(--radius-sm);
+}
+
+.nav-scroller .nav a::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%) scaleX(0);
+  width: 60%;
+  height: 2px;
+  background: var(--gradient-1);
+  transition: transform 0.3s ease;
+  border-radius: 1px;
+}
+
+.nav-scroller .nav a:hover {
+  color: var(--primary-color) !important;
+  background: rgba(99,102,241,0.06);
+}
+
+.nav-scroller .nav a:hover::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* 移动端横向滚动导航 */
+@media (max-width: 575.98px) {
+  .nav-scroller .nav {
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-scroller .nav::-webkit-scrollbar {
+    display: none;
+  }
+  .nav-scroller .nav a {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+  }
+}
