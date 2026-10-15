@@ -3,26 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>极简根目录博客</title>
+    <title>根目录博客</title>
+    <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <header>
-        <h1>📄 根目录文章</h1>
-        <p>直接跳转根目录下的 .md 文件</p>
-        <hr>
-    </header>
-    
-    <main>
-        <h2>文章列表</h2>
-        <ul>
-            <!-- 直接指向同目录的 readme.md -->
-            <li><a href="./readme.md" target="_blank">readme.md</a></li>
-        </ul>
-    </main>
+    <div class="container">
+        <header>
+            <div class="terminal-bar">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+                <span class="title">root@blog:~</span>
+            </div>
+            <div class="prompt-line">
+                <span class="user">visitor</span>
+                <span class="at">@</span>
+                <span class="host">localhost</span>
+                <span class="colon">:</span>
+                <span class="path">~</span>
+                <span class="dollar">$</span>
+                <span class="cmd">ls -la *.md</span>
+                <span class="blink">▊</span>
+            </div>
+        </header>
+        
+        <main>
+            <div class="output-header">
+                <span class="total">total <span id="file-count">0</span></span>
+                <div class="col-headers">
+                    <span class="col perms">permissions</span>
+                    <span class="col links">links</span>
+                    <span class="col owner">owner</span>
+                    <span class="col group">group</span>
+                    <span class="col size">size</span>
+                    <span class="col date">date</span>
+                    <span class="col name">name</span>
+                </div>
+            </div>
+            
+            <ul id="file-list"></ul>
 
-    <footer>
-        <hr>
-        <p>同目录读取 · 无构建步骤</p>
-    </footer>
+            <div class="output-footer">
+                <span class="prompt-next">
+                    <span class="user">visitor</span>
+                    <span class="at">@</span>
+                    <span class="host">localhost</span>
+                    <span class="colon">:</span>
+                    <span class="path">~</span>
+                    <span class="dollar">$</span>
+                    <span class="blink">▊</span>
+                </span>
+            </div>
+        </main>
+
+        <footer>
+            <div class="status-line">
+                <span class="status-item">● blog v1.0</span>
+                <span class="status-sep">|</span>
+                <span class="status-item">uptime 0d 0h 12m</span>
+                <span class="status-sep">|</span>
+                <span class="status-item">load average: 0.00 0.01 0.05</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="js/app.js"></script>
 </body>
 </html>
