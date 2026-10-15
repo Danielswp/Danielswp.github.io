@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>根目录博客</title>
+    <title>root@blog:~</title>
     <link rel="stylesheet" href="css/style.css">
+	<link rel="icon" href="assets/img/head.jpg" type="image/jpeg">
 </head>
 <body>
     <div class="container">
@@ -13,57 +14,21 @@
                 <span class="dot red"></span>
                 <span class="dot yellow"></span>
                 <span class="dot green"></span>
-                <span class="title">root@blog:~</span>
+                <span class="title">visitor@localhost:~</span>
             </div>
             <div class="prompt-line">
-                <span class="user">visitor</span>
-                <span class="at">@</span>
-                <span class="host">localhost</span>
-                <span class="colon">:</span>
-                <span class="path">~</span>
-                <span class="dollar">$</span>
-                <span class="cmd">ls -la *.md</span>
+                <span class="cmd">ls -1 notes/</span>
                 <span class="blink">▊</span>
             </div>
         </header>
-        
-        <main>
-            <div class="output-header">
-                <span class="total">total <span id="file-count">0</span></span>
-                <div class="col-headers">
-                    <span class="col perms">permissions</span>
-                    <span class="col links">links</span>
-                    <span class="col owner">owner</span>
-                    <span class="col group">group</span>
-                    <span class="col size">size</span>
-                    <span class="col date">date</span>
-                    <span class="col name">name</span>
-                </div>
-            </div>
-            
-            <ul id="file-list"></ul>
 
-            <div class="output-footer">
-                <span class="prompt-next">
-                    <span class="user">visitor</span>
-                    <span class="at">@</span>
-                    <span class="host">localhost</span>
-                    <span class="colon">:</span>
-                    <span class="path">~</span>
-                    <span class="dollar">$</span>
-                    <span class="blink">▊</span>
-                </span>
-            </div>
+        <main>
+            <ul id="file-list" class="note-list"></ul>
+            <nav id="pagination" class="pagination"></nav>
         </main>
 
         <footer>
-            <div class="status-line">
-                <span class="status-item">● blog v1.0</span>
-                <span class="status-sep">|</span>
-                <span class="status-item">uptime 0d 0h 12m</span>
-                <span class="status-sep">|</span>
-                <span class="status-item">load average: 0.00 0.01 0.05</span>
-            </div>
+            <p>root@blog:~$ <span class="blink">▊</span></p>
         </footer>
     </div>
 

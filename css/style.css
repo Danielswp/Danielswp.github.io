@@ -1,4 +1,18 @@
-/* ===== Reset & Base ===== */
+:root {
+    --bg: #fafaf8;
+    --card-bg: #ffffff;
+    --text-title: #3a3a3a;
+    --text-date: #b0b0a8;
+    --text-muted: #c8c8c0;
+    --border: #ecece8;
+    --border-light: #f5f5f2;
+    --accent: #9bb09e;
+    --accent-hover: #7a9480;
+    --hover-bg: #f8f9f6;
+    --shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    --shadow-hover: 0 4px 20px rgba(0, 0, 0, 0.07);
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,231 +20,163 @@
 }
 
 body {
-    font-family: "Cascadia Code", "Fira Code", "JetBrains Mono", "Consolas", "Courier New", monospace;
-    color: #a0b0c0;
-    background: #0c0c0c;
-    line-height: 1.65;
+    font-family: "Noto Serif SC", "Source Han Serif SC", "PingFang SC",
+                 "Hiragino Sans GB", "Microsoft YaHei", serif;
+    background-color: var(--bg);
+    color: var(--text-title);
+    line-height: 1.8;
+    font-size: 15px;
+    -webkit-font-smoothing: antialiased;
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    font-size: 14px;
 }
 
-/* ===== Layout ===== */
-.container {
-    max-width: 820px;
-    width: 92%;
-    margin: 0 auto;
-    padding: 60px 0 80px;
+/* ===== 头部 ===== */
+header {
+    margin-bottom: 2.5rem;
+}
+
+.terminal-bar {
+    display: none; /* 小清新不需要终端红黄绿点，隐藏掉 */
+}
+
+.prompt-line {
+    text-align: center;
+    padding: 2rem 0 1.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.prompt-line .cmd {
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--text-title);
+    letter-spacing: 2px;
+}
+
+.prompt-line .blink {
+    display: none; /* 隐藏闪烁光标 */
+}
+
+/* ===== 笔记列表 ===== */
+main {
     flex: 1;
 }
 
-/* ===== Terminal Title Bar ===== */
-.terminal-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    background: #1a1a1a;
-    border-radius: 8px 8px 0 0;
-    border-bottom: 1px solid #2a2a2a;
-}
-
-.dot {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-}
-
-.red { background: #ff5f57; }
-.yellow { background: #ffbd2e; }
-.green { background: #28c840; }
-
-.title {
-    margin-left: auto;
-    color: #555;
-    font-size: 12px;
-    letter-spacing: 0.05em;
-}
-
-/* ===== Prompt Line ===== */
-.prompt-line {
-    padding: 16px 20px 8px;
-    color: #ccc;
-    font-size: 14px;
-    background: #121212;
-    border-left: 1px solid #1e1e1e;
-    border-right: 1px solid #1e1e1e;
-}
-
-.user { color: #6bc46d; }
-.at { color: #888; }
-.host { color: #6bc46d; }
-.colon { color: #888; }
-.path { color: #569cd6; }
-.dollar { color: #888; }
-.cmd { color: #dcdcaa; }
-
-.blink {
-    color: #ccc;
-    animation: blink 1s step-end infinite;
-}
-
-@keyframes blink {
-    50% { opacity: 0; }
-}
-
-/* ===== Main Content Area ===== */
-main {
-    background: #121212;
-    border-left: 1px solid #1e1e1e;
-    border-right: 1px solid #1e1e1e;
-    padding: 0 20px 8px;
-}
-
-.output-header {
-    padding: 8px 0 4px;
-    color: #888;
-    font-size: 12px;
-}
-
-.total {
-    display: block;
-    margin-bottom: 4px;
-    color: #666;
-}
-
-.col-headers {
-    display: grid;
-    grid-template-columns: 90px 45px 55px 55px 50px 110px 1fr;
-    gap: 4px;
-    font-size: 11px;
-    color: #555;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    border-bottom: 1px solid #1e1e1e;
-    padding-bottom: 4px;
-    margin-bottom: 4px;
-}
-
-/* ===== File List ===== */
-ul {
+.note-list {
     list-style: none;
-    padding: 0;
 }
 
-li {
-    margin-bottom: 0;
-    animation: fadeIn 0.3s ease-out backwards;
+.note-list li {
+    background: var(--card-bg);
+    margin-bottom: 1rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    transition: all 0.25s ease;
+    overflow: hidden;
 }
 
-li:nth-child(1) { animation-delay: 0.1s; }
-li:nth-child(2) { animation-delay: 0.2s; }
+.note-list li:hover {
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-1px);
+    border-color: var(--accent);
+}
 
-li a {
-    display: grid;
-    grid-template-columns: 90px 45px 55px 55px 50px 110px 1fr;
-    gap: 4px;
-    padding: 6px 0;
+.note-list a {
     text-decoration: none;
-    color: #a0b0c0;
-    transition: background 0.15s ease;
-    border-radius: 3px;
-    align-items: center;
+    color: inherit;
+    display: block;
+    padding: 1.2rem 1.5rem;
 }
 
-li a:hover {
-    background: rgba(86, 156, 214, 0.07);
+.note-list .note-title {
+    font-size: 1.05rem;
+    font-weight: 500;
+    color: var(--text-title);
+    margin-bottom: 0.4rem;
+    letter-spacing: 0.5px;
+    transition: color 0.2s;
 }
 
-.perms { color: #6a9955; font-size: 13px; }
-.links { color: #888; text-align: right; font-size: 13px; }
-.owner { color: #569cd6; font-size: 13px; }
-.group { color: #569cd6; font-size: 13px; }
-.size { color: #ce9178; text-align: right; font-size: 13px; }
-.date { color: #888; font-size: 13px; }
-.name { 
-    color: #569cd6; 
-    font-size: 13px;
-    transition: color 0.15s ease;
-    text-decoration: underline;
-    text-decoration-color: transparent;
-    text-underline-offset: 3px;
+.note-list li:hover .note-title {
+    color: var(--accent-hover);
 }
 
-li a:hover .name {
-    color: #75b8f0;
-    text-decoration-color: #569cd6;
+.note-list .note-date {
+    font-size: 0.82rem;
+    color: var(--text-date);
+    font-family: "Courier New", monospace;
+    letter-spacing: 0.5px;
 }
 
-/* ===== Output Footer ===== */
-.output-footer {
-    padding: 12px 0 16px;
-    border-top: 1px solid #1e1e1e;
-    margin-top: 8px;
-}
-
-.prompt-next {
-    color: #ccc;
-    font-size: 14px;
-}
-
-.prompt-next .user { color: #6bc46d; }
-.prompt-next .at { color: #888; }
-.prompt-next .host { color: #6bc46d; }
-.prompt-next .colon { color: #888; }
-.prompt-next .path { color: #569cd6; }
-.prompt-next .dollar { color: #888; }
-
-/* ===== Footer Status Bar ===== */
-footer {
-    background: #121212;
-    border: 1px solid #1e1e1e;
-    border-top: none;
-    border-radius: 0 0 8px 8px;
-    padding: 10px 20px;
-}
-
-.status-line {
+/* ===== 分页 ===== */
+.pagination {
     display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 12px;
-    color: #555;
-    font-size: 11px;
+    gap: 0.5rem;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
 }
 
-.status-item { color: #666; }
-.status-sep { color: #333; }
-
-/* ===== Animations ===== */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(4px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.pagination button {
+    min-width: 2.2rem;
+    height: 2.2rem;
+    padding: 0 0.7rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card-bg);
+    color: var(--text-title);
+    font-family: inherit;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
 }
 
-/* ===== Selection ===== */
-::selection {
-    background: rgba(86, 156, 214, 0.3);
-    color: #e0e0e0;
+.pagination button:hover:not(:disabled):not(.active) {
+    border-color: var(--accent);
+    color: var(--accent-hover);
+    background: var(--hover-bg);
 }
 
-/* ===== Scrollbar ===== */
-::-webkit-scrollbar {
-    width: 6px;
+.pagination button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(155, 176, 158, 0.35);
 }
-::-webkit-scrollbar-track {
-    background: #0c0c0c;
+
+.pagination button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
 }
-::-webkit-scrollbar-thumb {
-    background: #1e1e1e;
-    border-radius: 3px;
+
+.pagination .ellipsis {
+    color: var(--text-muted);
+    padding: 0 0.3rem;
+    font-size: 0.9rem;
 }
-::-webkit-scrollbar-thumb:hover {
-    background: #2a2a2a;
+
+/* ===== 底部 ===== */
+footer {
+    margin-top: 3rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--text-date);
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+}
+
+footer p {
+    font-family: "Courier New", monospace;
 }
