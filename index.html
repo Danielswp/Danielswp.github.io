@@ -2,12 +2,13 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>root@blog:~</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>努力！奋斗</title>
+    <link rel="icon" href="assets/img/head.jpg" type="image/jpeg">
     <link rel="stylesheet" href="css/style.css">
-	<link rel="icon" href="/head.jph" type="assets/img">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css">
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11/styles/github-dark.min.css">
+    <link rel="stylesheet" href="css/rollback.css">
+    <link rel="stylesheet" href="css/github-markdown.min.css" media="print" onload="this.media='all'">
+    <link rel="stylesheet" href="css/github-dark.min.css" media="print" onload="this.media='all'">
 </head>
 <body>
     <div class="container">
@@ -22,22 +23,157 @@
                 <span class="cmd">ls -1 notes/</span>
                 <span class="blink">▊</span>
             </div>
+            <div class="stats" id="stats"></div>
         </header>
 
         <main>
-            <ul id="file-list" class="note-list"></ul>
+            <div class="search-bar">
+                <span class="search-prompt">$</span>
+                <input type="text" id="search-input" placeholder="grep 搜索笔记..." autocomplete="off">
+                <span class="search-clear" id="search-clear" style="display:none">✕</span>
+            </div>
+
+            <div class="category-bar" id="category-bar">
+                <button class="cat-btn active" data-cat="all">全部</button>
+                <button class="cat-btn" data-cat="技术">技术</button>
+                <button class="cat-btn" data-cat="随笔">随笔</button>
+                <button class="cat-btn" data-cat="生活">生活</button>
+            </div>
+
+            <div id="loading" class="loading">
+                <span class="blink">读取中...</span>
+            </div>
+            <ul id="file-list" class="note-list" style="display:none"></ul>
+            <div id="empty" class="empty" style="display:none">
+                <p>~ 暂无笔记 ~</p>
+            </div>
             <nav id="pagination" class="pagination"></nav>
         </main>
 
+        <!-- ========== 常用站点（网格平铺） ========== -->
+        <div class="bookmarks">
+            <div class="bookmarks-title"><span class="cmd">友情链接</span></div>
+
+            <!-- 国内 AI -->
+            <div class="bm-group">
+                <div class="bm-group-title">🤖 国内 AI</div>
+                <div class="bookmark-grid">
+                    <a href="https://chat.deepseek.com/" target="_blank" rel="noopener"><span class="ico">🧠</span>DeepSeek</a>
+                    <a href="https://tongyi.aliyun.com/" target="_blank" rel="noopener"><span class="ico">🌩️</span>通义千问</a>
+                    <a href="https://www.doubao.com/" target="_blank" rel="noopener"><span class="ico">🫘</span>豆包</a>
+                    <a href="https://yuanbao.tencent.com/" target="_blank" rel="noopener"><span class="ico">🐧</span>腾讯元宝</a>
+                    <a href="https://yiyan.baidu.com/" target="_blank" rel="noopener"><span class="ico">🅑</span>文心一言</a>
+                    <a href="https://xinghuo.xfyun.cn/" target="_blank" rel="noopener"><span class="ico">🔥</span>讯飞星火</a>
+                </div>
+            </div>
+
+            <!-- 国际 AI -->
+            <div class="bm-group">
+                <div class="bm-group-title">🌐 国际 AI</div>
+                <div class="bookmark-grid">
+                    <a href="https://chat.openai.com/" target="_blank" rel="noopener"><span class="ico">🤖</span>ChatGPT</a>
+                    <a href="https://claude.ai/" target="_blank" rel="noopener"><span class="ico">📎</span>Claude</a>
+                    <a href="https://gemini.google.com/" target="_blank" rel="noopener"><span class="ico">✨</span>Gemini</a>
+                </div>
+            </div>
+
+            <!-- 搜索 -->
+            <div class="bm-group">
+                <div class="bm-group-title">🔎 搜索</div>
+                <div class="bookmark-grid">
+                    <a href="https://www.baidu.com/" target="_blank" rel="noopener"><span class="ico">🐾</span>百度</a>
+                    <a href="https://www.bing.com/" target="_blank" rel="noopener"><span class="ico">🪟</span>Bing</a>
+                    <a href="https://www.google.com/" target="_blank" rel="noopener"><span class="ico">G</span>Google</a>
+                    <a href="https://www.sogou.com/" target="_blank" rel="noopener"><span class="ico">🔍</span>搜狗</a>
+                </div>
+            </div>
+
+            <!-- 视频 / 新闻 -->
+            <div class="bm-group">
+                <div class="bm-group-title">📺 视频 / 新闻</div>
+                <div class="bookmark-grid">
+                    <a href="https://www.bilibili.com/" target="_blank" rel="noopener"><span class="ico">📺</span>B 站</a>
+                    <a href="https://www.youtube.com/" target="_blank" rel="noopener"><span class="ico">▶️</span>YouTube</a>
+                    <a href="https://www.toutiao.com/" target="_blank" rel="noopener"><span class="ico">📰</span>今日头条</a>
+                    <a href="https://www.zhihu.com/" target="_blank" rel="noopener"><span class="ico">📘</span>知乎</a>
+                    <a href="https://www.tophub.today/" target="_blank" rel="noopener"><span class="ico">🔥</span>今日热榜</a>
+                </div>
+            </div>
+
+            <!-- 开发者 -->
+            <div class="bm-group">
+                <div class="bm-group-title">🛠 开发者</div>
+                <div class="bookmark-grid">
+                    <a href="https://juejin.cn/" target="_blank" rel="noopener"><span class="ico">⚡</span>掘金</a>
+                    <a href="https://www.csdn.net/" target="_blank" rel="noopener"><span class="ico">💻</span>CSDN</a>
+                    <a href="https://www.cnblogs.com/" target="_blank" rel="noopener"><span class="ico">📝</span>博客园</a>
+                    <a href="https://gitee.com/" target="_blank" rel="noopener"><span class="ico">🌳</span>Gitee</a>
+                    <a href="https://developer.mozilla.org/zh-CN/" target="_blank" rel="noopener"><span class="ico">🦊</span>MDN</a>
+                    <a href="https://www.runoob.com/" target="_blank" rel="noopener"><span class="ico">📖</span>菜鸟教程</a>
+                </div>
+            </div>
+
+            <!-- 文档效率 -->
+            <div class="bm-group">
+                <div class="bm-group-title">📚 文档 / 效率</div>
+                <div class="bookmark-grid">
+                    <a href="https://www.yuque.com/" target="_blank" rel="noopener"><span class="ico">📚</span>语雀</a>
+                    <a href="https://docs.qq.com/" target="_blank" rel="noopener"><span class="ico">📄</span>腾讯文档</a>
+                    <a href="https://www.feishu.cn/" target="_blank" rel="noopener"><span class="ico">☁️</span>飞书</a>
+                    <a href="https://www.sspai.com/" target="_blank" rel="noopener"><span class="ico">✨</span>少数派</a>
+                </div>
+            </div>
+        </div>
+
         <footer>
             <p>root@blog:~$ <span class="blink">▊</span></p>
+            <p class="footer-hint">点击笔记查看 · ESC 关闭 · ? 帮助</p>
         </footer>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/markdown-it@14/dist/markdown-it.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/highlight.js@11/lib/highlight.min.js"></script>
-	<script src="js/app.js"></script>
-	
+    <!-- ========== 回到顶部按钮 ========== -->
+    <button id="back-to-top" aria-label="回到顶部">
+        <span class="arrow-up"></span>
+    </button>
+
+    <script defer src="js/markdown-it.min.js"></script>
+    <script defer src="js/purify.min.js"></script>
+    <script defer src="js/highlight.min.js"></script>
+    <script defer src="js/app.js"></script>
+
+    <script>
+        // 书签分类折叠
+        document.querySelectorAll('.bm-group-title').forEach(function(title) {
+            title.addEventListener('click', function() {
+                this.parentElement.classList.toggle('collapsed');
+            });
+        });
+
+        // 回到顶部逻辑
+        (function() {
+            var btn = document.getElementById('back-to-top');
+            var threshold = 400;
+            var footer = document.querySelector('footer');
+            
+            if (footer && 'IntersectionObserver' in window) {
+                var observer = new IntersectionObserver(function(entries) {
+                    if (!entries[0].isIntersecting && window.pageYOffset > threshold) {
+                        btn.classList.add('show');
+                    } else {
+                        btn.classList.remove('show');
+                    }
+                }, { rootMargin: '-80px 0px 0px 0px' });
+                observer.observe(footer);
+            }
+
+            window.addEventListener('scroll', function() {
+                btn.classList.toggle('show', window.pageYOffset > threshold);
+            }, { passive: true });
+
+            btn.addEventListener('click', function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        })();
+    </script>
 </body>
 </html>
