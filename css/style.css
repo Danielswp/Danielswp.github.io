@@ -180,3 +180,291 @@ footer {
 footer p {
     font-family: "Courier New", monospace;
 }
+
+
+
+/* ============================================================
+   📌 笔记弹窗整体遮罩层
+   - 覆盖整个屏幕，半透明黑色背景
+   - 调 background 的 alpha 值(0.6) 改遮罩深浅，越大越暗
+   ============================================================ */
+#note-viewer {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);  /* ← 遮罩深浅，0=全透 1=全黑 */
+    z-index: 9999;                  /* ← 层级，确保盖住所有内容 */
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+#note-viewer.open {
+    display: flex;
+}
+
+/* ============================================================
+   📌 弹窗主体容器（白底卡片）
+   - max-width 控制弹窗最大宽度
+   - border 控制边框颜色和粗细
+   - border-radius 控制圆角
+   - box-shadow 控制阴影大小和颜色
+   ============================================================ */
+.viewer-inner {
+    width: 100%;
+    max-width: 900px;               /* ← 弹窗最大宽度，调大=更宽 */
+    background: #ffffff;             /* ← 弹窗背景色，白底 */
+    border: 1px solid #ccc;          /* ← 弹窗边框，灰色 */
+    border-radius: 8px;              /* ← 圆角大小 */
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);  /* ← 阴影 */
+}
+
+/* ============================================================
+   📌 标题栏（红黄绿三个点那一行）
+   - background 控制标题栏背景色
+   - border-bottom 控制底部分隔线
+   ============================================================ */
+.viewer-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.6rem 1rem;
+    background: #f5f5f5;             /* ← 标题栏背景，浅灰 */
+    border-bottom: 1px solid #ddd;   /* ← 分隔线颜色 */
+}
+
+/* 红黄绿三个点 */
+.viewer-bar .dot {
+    width: 12px;                    /* ← 点的大小 */
+    height: 12px;
+    border-radius: 50%;              /* 正圆 */
+}
+
+.viewer-bar .red { background: #ff5f56; }    /* ← 关闭点颜色 */
+.viewer-bar .yellow { background: #ffbd2e; } /* ← 最小化点颜色 */
+.viewer-bar .green { background: #27c93f; }  /* ← 最大化点颜色 */
+
+/* ============================================================
+   📌 标题栏文件名文字
+   - color 控制文字颜色
+   - font-family 控制字体
+   ============================================================ */
+.viewer-title {
+    flex: 1;
+    color: #555;                    /* ← 文件名文字颜色 */
+    font-family: "Fira Mono", "Consolas", monospace;  /* ← 等宽字体 */
+    font-size: 0.82rem;             /* ← 字号 */
+    margin-left: 0.5rem;
+}
+
+/* ============================================================
+   📌 关闭按钮 [X]
+   - border 控制边框
+   - color 控制文字颜色
+   - hover 时背景变红
+   ============================================================ */
+.viewer-close {
+    background: none;
+    border: 1px solid #bbb;          /* ← 边框颜色 */
+    color: #555;                    /* ← 文字颜色 */
+    font-family: monospace;
+    cursor: pointer;
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 0.8rem;
+}
+
+.viewer-close:hover {
+    background: #ff5f56;             /* ← hover 背景变红 */
+    border-color: #ff5f56;
+    color: #fff;                    /* ← hover 文字变白 */
+}
+
+/* ============================================================
+   📌 内容区域（正文部分）
+   - height 控制高度
+   - padding 控制内边距
+   - color 控制正文文字颜色
+   - font-family 控制字体
+   - background 控制背景色
+   ============================================================ */
+.viewer-body {
+    height: 70vh;                   /* ← 弹窗高度，70%视口高 */
+    padding: 1.5rem 2rem;           /* ← 内边距，上下1.5 左右2 */
+    overflow-y: auto;               /* ← 内容超出时滚动 */
+    color: #333;                    /* ← 正文文字颜色，深灰 */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;  /* ← 正文字体 */
+    font-size: 0.95rem;             /* ← 正文字号 */
+    line-height: 1.7;               /* ← 行高，越大越松散 */
+    background: #fff;               /* ← 内容区背景，白色 */
+}
+
+/* ============================================================
+   📌 标题 h1-h4
+   - color 控制颜色
+   - margin-top 控制上间距
+   - font-size 控制大小
+   ============================================================ */
+.viewer-body h1,
+.viewer-body h2,
+.viewer-body h3,
+.viewer-body h4 {
+    color: #222;                    /* ← 标题颜色 */
+    margin-top: 1.5rem;             /* ← 标题上方间距 */
+    margin-bottom: 0.6rem;          /* ← 标题下方间距 */
+    font-weight: 600;               /* ← 字重，600=半粗 */
+}
+
+.viewer-body h1 {
+    font-size: 1.5rem;              /* ← h1 字号 */
+    border-bottom: 1px solid #eee;  /* ← h1 底部分隔线 */
+    padding-bottom: 0.4rem;
+}
+.viewer-body h2 {
+    font-size: 1.25rem;             /* ← h2 字号 */
+    border-bottom: 1px solid #f0f0f0;
+    padding-bottom: 0.3rem;
+}
+.viewer-body h3 { font-size: 1.1rem; }
+.viewer-body h4 { font-size: 1rem; }
+
+/* ============================================================
+   📌 段落 <p>
+   ============================================================ */
+.viewer-body p {
+    margin: 0.6rem 0;               /* ← 段间距 */
+    color: #333;                    /* ← 段落文字颜色 */
+}
+
+/* ============================================================
+   📌 链接 <a>
+   - color 控制链接颜色
+   ============================================================ */
+.viewer-body a {
+    color: #0969da;                 /* ← 链接蓝色（GitHub风） */
+    text-decoration: none;
+}
+
+.viewer-body a:hover {
+    text-decoration: underline;      /* ← hover 时下划线 */
+}
+
+/* ============================================================
+   📌 行内代码 `code`
+   - background 控制背景
+   - color 控制文字颜色（红色=区分）
+   ============================================================ */
+.viewer-body code {
+    background: #f6f8fa;            /* ← 浅灰背景 */
+    color: #cf222e;                 /* ← 红色文字，突出代码 */
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: "Fira Mono", "Consolas", monospace;
+    font-size: 0.85em;              /* ← 比正文小一点 */
+}
+
+/* ============================================================
+   📌 代码块 <pre><code>
+   - background 代码块背景
+   - border 边框
+   ============================================================ */
+.viewer-body pre {
+    background: #f6f8fa;            /* ← 代码块背景，浅灰 */
+    border: 1px solid #e1e4e8;      /* ← 边框颜色 */
+    border-radius: 6px;             /* ← 圆角 */
+    padding: 1rem;                 /* ← 内边距 */
+    overflow-x: auto;               /* ← 横向超出滚动 */
+    margin: 0.8rem 0;
+}
+
+.viewer-body pre code {
+    background: none;               /* ← 取消内层背景 */
+    color: #24292f;                 /* ← 代码文字颜色，深灰 */
+    padding: 0;
+    font-size: 0.85rem;
+}
+
+/* ============================================================
+   📌 引用块 <blockquote>
+   - border-left 左边竖线
+   - color 文字颜色（灰色=次要）
+   ============================================================ */
+.viewer-body blockquote {
+    border-left: 4px solid #dfe2e5; /* ← 左边竖线粗细+颜色 */
+    color: #57606a;                 /* ← 引用文字颜色，灰 */
+    margin: 0.8rem 0;
+    padding: 0 1rem;
+}
+
+/* ============================================================
+   📌 列表 <ul> <ol> <li>
+   ============================================================ */
+.viewer-body ul,
+.viewer-body ol {
+    margin: 0.5rem 0;
+    padding-left: 1.5rem;           /* ← 缩进 */
+    color: #333;
+}
+
+.viewer-body li {
+    margin: 0.3rem 0;               /* ← 列表项间距 */
+}
+
+/* ============================================================
+   📌 表格 <table>
+   ============================================================ */
+.viewer-body table {
+    border-collapse: collapse;
+    margin: 0.8rem 0;
+    width: 100%;
+}
+
+.viewer-body th,
+.viewer-body td {
+    border: 1px solid #d0d7de;      /* ← 表格边框颜色 */
+    padding: 0.5rem 0.8rem;        /* ← 单元格内边距 */
+}
+
+.viewer-body th {
+    background: #f6f8fa;            /* ← 表头背景 */
+    font-weight: 600;
+}
+
+/* ============================================================
+   📌 分隔线 <hr>
+   ============================================================ */
+.viewer-body hr {
+    border: none;
+    border-top: 1px solid #d8dee4;  /* ← 分隔线颜色 */
+    margin: 1.2rem 0;
+}
+
+/* ============================================================
+   📌 图片 <img>
+   ============================================================ */
+.viewer-body img {
+    max-width: 100%;                /* ← 最大宽度不超出 */
+    border-radius: 6px;
+}
+
+/* ============================================================
+   📌 加粗 <strong> <b>
+   ============================================================ */
+.viewer-body strong {
+    color: #222;                    /* ← 加粗颜色，比正文深 */
+    font-weight: 600;
+}
+
+/* ============================================================
+   📌 加载动画（blink）
+   - animation 控制闪烁频率
+   ============================================================ */
+.viewer-body .blink {
+    color: #666;
+    animation: blink 1s step-end infinite;  /* ← 1秒闪烁一次 */
+}
+
+@keyframes blink {
+    50% { opacity: 0; }
+}
