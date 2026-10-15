@@ -468,3 +468,66 @@ footer p {
 @keyframes blink {
     50% { opacity: 0; }
 }
+
+
+/* 弹窗遮罩 */
+#note-viewer {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+#note-viewer.open {
+    display: flex;
+}
+
+/* 弹窗主体 */
+.viewer-inner {
+    width: 100%;
+    max-width: 860px;
+    max-height: 90vh;
+    background: #0d1117;
+    border-radius: 8px;
+    border: 1px solid #30363d;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 标题栏 */
+.viewer-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+}
+.viewer-title {
+    flex: 1;
+    color: #8b949e;
+    font-family: monospace;
+    font-size: 14px;
+    margin-left: 8px;
+}
+.viewer-close {
+    background: none;
+    border: none;
+    color: #8b949e;
+    cursor: pointer;
+    font-family: monospace;
+    font-size: 14px;
+}
+.viewer-close:hover { color: #f0f6fc; }
+
+/* 内容区 */
+.viewer-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+    color: #c9d1d9;
+}
