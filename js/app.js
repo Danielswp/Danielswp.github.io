@@ -7,8 +7,8 @@ let currentPage = 1;
 const notes = [
     { title: '【置顶】本站故事', date: '2026-10-15 23:37:53', link: 'readme.md', category: '技术' },
     { title: '【强推】好用软件', date: '2026-10-15 23:37:58', link: 'blog/Software.md', category: '分享' },
-    { title: 'QRhi', date: '2026-10-16 00:07:54', link: 'blog/QRhi.md', category: '图形学' },
-    { title: '第四篇笔记', date: '2024-01-04', link: 'notes/note4.md', category: '生活' },
+    { title: 'QRhi', date: '2026-10-16 00:07:54', link: 'blog/QRhi.md', category: '技术' },
+    { title: '人怎么变好看（男女通用）', date: '2026-10-17 20:17:05', link: 'blog/whitening.md', category: '生活' },
     { title: '第五篇笔记', date: '2024-01-05', link: 'notes/note5.md', category: '技术' },
     { title: '第六篇笔记', date: '2024-01-06', link: 'notes/note6.md', category: '随笔' },
     { title: '第七篇笔记', date: '2024-01-07', link: 'notes/note7.md', category: '技术' },

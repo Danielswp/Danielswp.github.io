@@ -1,0 +1,4 @@
+没有服务怎么办，安装python，最简单的方式咯
+# 项目根目录运行
+python -m http.server 8000
+http://localhost:8000
