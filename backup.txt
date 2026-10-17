@@ -3,3 +3,15 @@
 # 项目根目录运行
 python -m http.server 8000
 浏览器：http://localhost:8000
+
+
+冲突怎么办？
+推荐做法：先拉取再推送（保留双方历史）
+# 确保在 master 分支
+git checkout master
+
+# 拉取远程改动并自动合并（推荐，能减少无意义 merge 提交）
+git pull --rebase origin master
+
+# 再推送
+git push origin master
