@@ -12,5 +12,5 @@
 | 🖼️ **截图标注** | **Flameshot** | 跨平台开源截图工具，支持箭头、马赛克、序号标注及图床上传 | [GitHub](https://github.com/flameshot-org/flameshot/releases) |
 | 🚀 **终端工具** | **WindTerm** | 开源跨平台终端/远程连接客户端，类似 Xshell/MobaXterm，偏向“终端 IDE” | [GitHub](https://github.com/kingToolbox/WindTerm/releases) |
 | 📖 **Markdown 编辑** | **MarkText** | 免费开源跨平台 Markdown 编辑器，所见即所得，Typora 替代品 | [GitHub](https://github.com/marktext/marktext/releases) |
-| 📥 **下载工具** | **Motrix Next** | 开源轻量全协议下载器（HTTP/FTP/BT/磁力/ed2k），Tauri2+Rust 重写，约 20MB | [GitHub](https://github.com/AnInsomniacy/motrix-next/releases) |
+| 📥 **下载工具** | **Gopeed** | 开源轻量多协议下载器（HTTP/FTP/BT/磁力/ed2k），Go+Flutter 跨平台，带 Chrome/Edge/Firefox 浏览器接管扩展，支持 REST API 与远程管理 | [GitHub Releases](https://github.com/GopeedLab/gopeed/releases) / [官网](https://gopeed.com) / [浏览器扩展](https://github.com/GopeedLab/browser-extension) |
 | 🗜️ **压缩解压** | **7-Zip** | 开源高压缩比归档工具，支持 7z/zip/tar/xz 及大量解包格式，右键集成 | [官网](https://www.7-zip.org/) / [中文站](https://www.7-zip.cn/download.html) |
