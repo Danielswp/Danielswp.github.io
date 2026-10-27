@@ -1,7 +1,7 @@
 // ============================================
 // 配置
 // ============================================
-const PAGE_SIZE = 5;
+const PAGE_SIZE = 20;
 let currentPage = 1;
 
 const notes = [
@@ -17,6 +17,19 @@ const notes = [
     { title: '第十篇笔记', date: '2024-01-10', link: 'notes/note10.md', category: '随笔' },
     { title: '第十一篇笔记', date: '2024-01-11', link: 'notes/note11.md', category: '技术' },
     { title: '第十二篇笔记', date: '2024-01-12', link: 'notes/note12.md', category: '生活' },
+    { title: '第十篇笔记', date: '2024-01-10', link: 'notes/note10.md', category: '随笔' },
+    { title: '第十一篇笔记', date: '2024-01-11', link: 'notes/note11.md', category: '技术' },
+    { title: '第十二篇笔记', date: '2024-01-12', link: 'notes/note12.md', category: '生活' },
+    { title: '第六篇笔记', date: '2024-01-06', link: 'notes/note6.md', category: '随笔' },
+    { title: '第七篇笔记', date: '2024-01-07', link: 'notes/note7.md', category: '技术' },
+    { title: '第八篇笔记', date: '2024-01-08', link: 'notes/note8.md', category: '生活' },
+    { title: '第九篇笔记', date: '2024-01-09', link: 'notes/note9.md', category: '技术' },
+    { title: '第十篇笔记', date: '2024-01-10', link: 'notes/note10.md', category: '随笔' },
+    { title: '第十一篇笔记', date: '2024-01-11', link: 'notes/note11.md', category: '技术' },
+    { title: '第十二篇笔记', date: '2024-01-12', link: 'notes/note12.md', category: '生活' },
+    { title: '第十篇笔记', date: '2024-01-10', link: 'notes/note10.md', category: '随笔' },
+    { title: '第十一篇笔记', date: '2024-01-11', link: 'notes/note11.md', category: '技术' },
+    { title: '第十二篇笔记', date: '2024-01-12', link: 'notes/note12.md', category: '生活' }
 ];
 
 // ============================================
