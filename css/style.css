@@ -323,125 +323,220 @@ footer { margin-top: auto; padding-top: 20px; border-top: 1px solid var(--border
     font-size: 0.7rem;
 }
 
-        /* ========== 书签网格（类似截图平铺） ========== */
-        .bookmarks {
-            margin-top: 32px;
-            padding: 16px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-        }
-        .bookmarks-title {
-            font-family: var(--mono);
-            font-size: 0.8rem;
-            margin-bottom: 12px;
-            padding-bottom: 8px;
-            border-bottom: 1px dashed var(--border);
-            color: var(--text-muted);
-        }
-        .bookmarks-title .cmd { color: var(--green); }
+/* ========== 书签网格（类似截图平铺） ========== */
+.bookmarks {
+	margin-top: 32px;
+	padding: 16px;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+}
+.bookmarks-title {
+	font-family: var(--mono);
+	font-size: 0.8rem;
+	margin-bottom: 12px;
+	padding-bottom: 8px;
+	border-bottom: 1px dashed var(--border);
+	color: var(--text-muted);
+}
+.bookmarks-title .cmd { color: var(--green); }
 
-        .bm-group { margin-bottom: 18px; }
-        .bm-group:last-child { margin-bottom: 0; }
+.bm-group { margin-bottom: 18px; }
+.bm-group:last-child { margin-bottom: 0; }
 
-        .bm-group-title {
-            font-size: 0.82rem;
-            color: var(--accent);
-            font-family: var(--mono);
-            margin-bottom: 10px;
-            cursor: pointer;
-            user-select: none;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .bm-group-title::before {
-            content: "▼";
-            font-size: 0.6rem;
-            transition: transform 0.2s;
-            display: inline-block;
-        }
-        .bm-group.collapsed .bm-group-title::before {
-            transform: rotate(-90deg);
-        }
-        .bm-group.collapsed .bookmark-grid {
-            display: none;
-        }
+.bm-group-title {
+	font-size: 0.82rem;
+	color: var(--accent);
+	font-family: var(--mono);
+	margin-bottom: 10px;
+	cursor: pointer;
+	user-select: none;
+	display: flex;
+	align-items: center;
+	gap: 6px;
+}
+.bm-group-title::before {
+	content: "▼";
+	font-size: 0.6rem;
+	transition: transform 0.2s;
+	display: inline-block;
+}
+.bm-group.collapsed .bm-group-title::before {
+	transform: rotate(-90deg);
+}
+.bm-group.collapsed .bookmark-grid {
+	display: none;
+}
 
-        .bookmark-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 10px;
-        }
-        .bookmark-grid a {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 10px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--text-muted);
-            text-decoration: none;
-            font-family: var(--mono);
-            font-size: 0.82rem;
-            transition: all 0.2s;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-        }
-        .bookmark-grid a:hover {
-            border-color: var(--accent);
-            color: var(--accent);
-            background: var(--accent-dim);
-            transform: translateY(-1px);
-        }
-        .bookmark-grid a .ico {
-            font-size: 1.1rem;
-            line-height: 1;
-            flex-shrink: 0;
-        }
+.bookmark-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+	gap: 10px;
+}
+.bookmark-grid a {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	padding: 8px 10px;
+	background: var(--bg);
+	border: 1px solid var(--border);
+	border-radius: 8px;
+	color: var(--text-muted);
+	text-decoration: none;
+	font-family: var(--mono);
+	font-size: 0.82rem;
+	transition: all 0.2s;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+.bookmark-grid a:hover {
+	border-color: var(--accent);
+	color: var(--accent);
+	background: var(--accent-dim);
+	transform: translateY(-1px);
+}
+.bookmark-grid a .ico {
+	font-size: 1.1rem;
+	line-height: 1;
+	flex-shrink: 0;
+}
 
-        /* 回到顶部 */
-        #back-to-top {
-            position: fixed;
-            right: 24px;
-            bottom: 24px;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: var(--accent);
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(20px);
-            transition: all 0.3s;
-            z-index: 99;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        #back-to-top.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-        #back-to-top .arrow-up {
-            width: 0;
-            height: 0;
-            border-left: 7px solid transparent;
-            border-right: 7px solid transparent;
-            border-bottom: 10px solid #fff;
-        }
-        #back-to-top:hover {
-            background: var(--green);
-        }
+/* 回到顶部 */
+#back-to-top {
+	position: fixed;
+	right: 24px;
+	bottom: 24px;
+	width: 42px;
+	height: 42px;
+	border-radius: 50%;
+	background: var(--accent);
+	color: #fff;
+	border: none;
+	cursor: pointer;
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(20px);
+	transition: all 0.3s;
+	z-index: 99;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+#back-to-top.show {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
+#back-to-top .arrow-up {
+	width: 0;
+	height: 0;
+	border-left: 7px solid transparent;
+	border-right: 7px solid transparent;
+	border-bottom: 10px solid #fff;
+}
+#back-to-top:hover {
+	background: var(--green);
+}
 
-        /* 响应式 */
-        @media (max-width: 768px) {
-            .bookmark-grid {
-                grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-            }
-        }
+/* 响应式 */
+@media (max-width: 768px) {
+	.bookmark-grid {
+		grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+	}
+}
+		
+/* ===== 浅色清晰版：参考目标图的浅灰底 + 深灰字 + 实色激活 ===== */
+:root {
+    --toc-bg:        #f5f5f7;          /* 目标图同款浅灰底 */
+    --toc-line:      #e0e0e0;          /* 右侧细分隔线 */
+    --toc-fg:        #1d1d1f;          /* h1 标题：近黑，最高对比 */
+    --toc-fg-dim:    #424245;          /* h2 常规：深灰，清晰易读 */
+    --toc-fg-soft:   #86868b;          /* h3 次级：中灰，缩小显层级 */
+    --toc-hover:     #e8e8ed;          /* hover：微深灰底，字不动 */
+    --toc-accent:    #4ade80;          /* 延续你的绿，也可换 #34c759 (苹果绿) */
+    --toc-active-bg: var(--toc-accent);
+}
+
+.viewer-layout { display: flex; flex: 1; min-height: 0; overflow: hidden; }
+
+.viewer-toc {
+    width: 250px;
+    flex: 0 0 250px;
+    overflow-y: auto;
+    padding: 12px 0;
+    border-right: 1px solid var(--toc-line);
+    background: var(--toc-bg);
+    font-size: 13.5px;                 /* 目标图约 13-14px */
+    line-height: 1.5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    transition: margin-left .25s cubic-bezier(0.32,0.72,0,1), flex-basis .25s, padding .25s;
+}
+.viewer-toc-collapsed {
+    margin-left: -250px;
+    flex-basis: 0;
+    padding-left: 0; padding-right: 0;
+    border-right-color: transparent;
+}
+.toc-empty { color: var(--toc-fg-soft); font-size: 13px; padding: 0 12px; }
+
+/* 目录项：字色锁死，绝不发花 */
+.toc-item {
+    display: block;
+    color: var(--toc-fg-dim) !important;
+    background: transparent;
+    text-decoration: none;
+    padding: 6px 16px;
+    margin: 1px 0;
+    border-radius: 0;                  /* 目标图无圆角，靠实底区分 */
+    font-size: inherit;
+    line-height: 1.5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: background-color .12s ease, color .12s ease;
+}
+.toc-item:hover {
+    background: var(--toc-hover);
+    color: var(--toc-fg-dim) !important; /* hover只换底，字不提亮 */
+}
+/* 激活态：实绿底 + 白字，延续你的风格且最高清 */
+.toc-item.active {
+    background: var(--toc-active-bg) !important;
+    color: #ffffff !important;
+    font-weight: 600;
+    border-left: 3px solid var(--toc-accent); /* 左侧微点缀，呼应目标图绿线 */
+    padding-left: 13px;                /* 补偿边框宽度 */
+}
+
+/* 层级：h1加粗，h2缩进，h3更缩进且浅 */
+.toc-l1 { color: var(--toc-fg) !important; font-weight: 600; margin-top: 8px; font-size: 14px; }
+.toc-l2 { padding-left: 28px !important; }
+.toc-l3 { padding-left: 48px !important; font-size: 12.5px; color: var(--toc-fg-soft) !important; }
+.toc-l3:hover { color: var(--toc-fg-dim) !important; }
+
+/* 开关按钮：适配浅色底 */
+.toc-toggle {
+    background: #ffffff;
+    border: 1px solid var(--toc-line);
+    color: var(--toc-fg-dim);
+    border-radius: 6px;
+    width: 31px; height: 25px;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    margin-right: 6px;
+}
+.toc-toggle:hover { background: var(--toc-hover); color: var(--toc-fg); }
+.toc-toggle.on   { background: var(--toc-accent); color: #fff; border-color: var(--toc-accent); }
+
+/* 滚动条：目标图细条 */
+.viewer-toc::-webkit-scrollbar { width: 6px; }
+.viewer-toc::-webkit-scrollbar-track { background: transparent; }
+.viewer-toc::-webkit-scrollbar-thumb { background: #c0c0c0; border-radius: 3px; }
+.viewer-toc::-webkit-scrollbar-thumb:hover { background: #a0a0a0; }
+
+@media (max-width: 860px) {
+    .viewer-toc { position: absolute; z-index: 5; height: 100%; margin-left: -250px; box-shadow: 10px 0 28px rgba(0,0,0,.15); }
+    .viewer-toc:not(.viewer-toc-collapsed) { margin-left: 0; }
+}

@@ -16,19 +16,6 @@ const notes = [
     { title: '第九篇笔记', date: '2024-01-09', link: 'notes/note9.md', category: '技术' },
     { title: '第十篇笔记', date: '2024-01-10', link: 'notes/note10.md', category: '随笔' },
     { title: '第十一篇笔记', date: '2024-01-11', link: 'notes/note11.md', category: '技术' },
-    { title: '第十二篇笔记', date: '2024-01-12', link: 'notes/note12.md', category: '生活' },
-    { title: '第十篇笔记', date: '2024-01-10', link: 'notes/note10.md', category: '随笔' },
-    { title: '第十一篇笔记', date: '2024-01-11', link: 'notes/note11.md', category: '技术' },
-    { title: '第十二篇笔记', date: '2024-01-12', link: 'notes/note12.md', category: '生活' },
-    { title: '第六篇笔记', date: '2024-01-06', link: 'notes/note6.md', category: '随笔' },
-    { title: '第七篇笔记', date: '2024-01-07', link: 'notes/note7.md', category: '技术' },
-    { title: '第八篇笔记', date: '2024-01-08', link: 'notes/note8.md', category: '生活' },
-    { title: '第九篇笔记', date: '2024-01-09', link: 'notes/note9.md', category: '技术' },
-    { title: '第十篇笔记', date: '2024-01-10', link: 'notes/note10.md', category: '随笔' },
-    { title: '第十一篇笔记', date: '2024-01-11', link: 'notes/note11.md', category: '技术' },
-    { title: '第十二篇笔记', date: '2024-01-12', link: 'notes/note12.md', category: '生活' },
-    { title: '第十篇笔记', date: '2024-01-10', link: 'notes/note10.md', category: '随笔' },
-    { title: '第十一篇笔记', date: '2024-01-11', link: 'notes/note11.md', category: '技术' },
     { title: '第十二篇笔记', date: '2024-01-12', link: 'notes/note12.md', category: '生活' }
 ];
 
@@ -37,12 +24,11 @@ const notes = [
 // ============================================
 const cache = new Map();
 let md = null;
-let filteredNotes = notes;          // 缓存筛选结果，避免重复 filter
+let filteredNotes = notes;
 let searchQuery = '';
 let activeCategory = 'all';
 let debounceTimer = null;
 
-// DOM 引用（启动时缓存）
 let fileList, pagination, loading, statsEl, noResultEl;
 
 // ============================================
@@ -55,7 +41,7 @@ function getMd() {
         html: false,
         linkify: true,
         typographer: true,
-        highlight: function(code, lang) {
+        highlight: function (code, lang) {
             if (lang && window.hljs && window.hljs.getLanguage(lang)) {
                 try { return window.hljs.highlight(code, { language: lang }).value; } catch (e) {}
             }
@@ -69,29 +55,35 @@ function getMd() {
 // ============================================
 // 弹窗
 // ============================================
-const Viewer = (function() {
+const Viewer = (function () {
     let overlay = null;
 
     function init() {
         if (overlay) return;
         overlay = document.createElement('div');
         overlay.id = 'note-viewer';
+        // ★ 改动点：加了 toc-toggle + viewer-toc + viewer-layout
         overlay.innerHTML = '<div class="viewer-inner">' +
             '<div class="viewer-bar">' +
                 '<span class="dot red"></span>' +
                 '<span class="dot yellow"></span>' +
                 '<span class="dot green"></span>' +
                 '<span class="viewer-title" id="viewer-filename"></span>' +
+                '<button class="toc-toggle" id="toc-toggle" title="目录 (T)">☰</button>' +
                 '<button class="viewer-close" id="viewer-close">[X]</button>' +
             '</div>' +
-            '<div class="viewer-body" id="viewer-content">' +
-                '<div class="loading"><span class="blink">加载中...</span></div>' +
+            '<div class="viewer-layout">' +
+                '<nav class="viewer-toc" id="viewer-toc"></nav>' +
+                '<div class="viewer-body" id="viewer-content">' +
+                    '<div class="loading"><span class="blink">加载中...</span></div>' +
+                '</div>' +
             '</div>' +
         '</div>';
         document.querySelector('.container').appendChild(overlay);
+
         document.getElementById('viewer-close').onclick = close;
-        overlay.onclick = function(e) { if (e.target === overlay) close(); };
-        document.addEventListener('keydown', function(e) {
+        overlay.onclick = function (e) { if (e.target === overlay) close(); };
+        document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && overlay.classList.contains('open')) close();
         });
     }
@@ -102,24 +94,28 @@ const Viewer = (function() {
         overlay.classList.add('open');
         document.body.style.overflow = 'hidden';
         var content = document.getElementById('viewer-content');
+
         if (cache.has(link)) {
             content.innerHTML = cache.get(link);
+            Toc.refresh();                     // ★ 缓存命中也建目录
             return;
         }
         content.innerHTML = '<div class="loading"><span class="blink">加载中...</span></div>';
         fetch(link)
-            .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
-            .then(function(text) {
+            .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+            .then(function (text) {
                 var parser = getMd();
                 if (!parser) { content.innerHTML = '<p style="color:red;">渲染引擎加载中，请重试</p>'; return; }
                 var html = parser.render(text);
                 if (window.DOMPurify) html = window.DOMPurify.sanitize(html);
                 cache.set(link, html);
                 content.innerHTML = html;
+                Toc.refresh();                 // ★ 渲染完建目录
             })
-            .catch(function(err) {
+            .catch(function (err) {
                 console.error('加载失败:', link, err);
                 content.innerHTML = '<p style="color:#cf222e;">加载失败: ' + link + '</p>';
+                Toc.refresh();                 // ★ 失败时也刷新（显示“无标题”）
             });
     }
 
@@ -132,28 +128,23 @@ const Viewer = (function() {
 })();
 
 // ============================================
-// 筛选（只算一次，结果存 filteredNotes）
+// 筛选
 // ============================================
 function doFilter() {
     var lower = searchQuery.toLowerCase();
-    filteredNotes = notes.filter(function(note) {
+    filteredNotes = notes.filter(function (note) {
         return (activeCategory === 'all' || note.category === activeCategory) &&
-               (!lower || note.title.toLowerCase().indexOf(lower) !== -1);
+            (!lower || note.title.toLowerCase().indexOf(lower) !== -1);
     });
 }
 
-// ============================================
-// 渲染当前页（不再重复 filter）
-// ============================================
 function renderPage() {
-    // 统计
     if (statsEl) {
         statsEl.textContent = (searchQuery || activeCategory !== 'all')
             ? '筛选结果: ' + filteredNotes.length + ' 篇'
             : notes.length + ' 篇笔记';
     }
 
-    // 空结果
     if (filteredNotes.length === 0) {
         loading.style.display = 'none';
         fileList.style.display = 'none';
@@ -179,7 +170,6 @@ function renderPage() {
     loading.style.display = 'none';
     fileList.style.display = 'block';
 
-    // 列表渲染
     var html = '';
     for (var i = 0; i < slice.length; i++) {
         var n = slice[i];
@@ -190,7 +180,6 @@ function renderPage() {
     }
     fileList.innerHTML = html;
 
-    // 分页
     if (totalPages <= 1) { pagination.innerHTML = ''; return; }
     var pager = '<button ' + (currentPage === 1 ? 'disabled' : '') + ' data-page="' + (currentPage - 1) + '">[&lt;]</button>';
     for (var p = 1; p <= totalPages; p++) {
@@ -204,47 +193,33 @@ function renderPage() {
     pagination.innerHTML = pager;
 }
 
-// ============================================
-// 入口：筛选 + 渲染
-// ============================================
-function applyFilter() {
-    doFilter();
-    renderPage();
-}
+function applyFilter() { doFilter(); renderPage(); }
 
-// ============================================
-// 防抖搜索
-// ============================================
 function debounceFilter() {
     if (debounceTimer) clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(function() {
-        currentPage = 1;
-        applyFilter();
-    }, 300);
+    debounceTimer = setTimeout(function () { currentPage = 1; applyFilter(); }, 300);
 }
 
 // ============================================
 // 启动
 // ============================================
-document.addEventListener('DOMContentLoaded', function() {
-    // 缓存 DOM
+document.addEventListener('DOMContentLoaded', function () {
     fileList = document.getElementById('file-list');
     pagination = document.getElementById('pagination');
     loading = document.getElementById('loading');
     statsEl = document.getElementById('stats');
 
-    // 搜索
     var input = document.getElementById('search-input');
     var clearBtn = document.getElementById('search-clear');
     if (input) {
-        input.addEventListener('input', function(e) {
+        input.addEventListener('input', function (e) {
             searchQuery = e.target.value.trim();
             if (clearBtn) clearBtn.style.display = searchQuery ? 'inline' : 'none';
             debounceFilter();
         });
     }
     if (clearBtn) {
-        clearBtn.addEventListener('click', function() {
+        clearBtn.addEventListener('click', function () {
             input.value = '';
             searchQuery = '';
             clearBtn.style.display = 'none';
@@ -254,12 +229,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 分类
     var bar = document.getElementById('category-bar');
     if (bar) {
-        bar.addEventListener('click', function(e) {
+        bar.addEventListener('click', function (e) {
             if (!e.target.classList.contains('cat-btn')) return;
-            bar.querySelectorAll('.cat-btn').forEach(function(b) { b.classList.remove('active'); });
+            bar.querySelectorAll('.cat-btn').forEach(function (b) { b.classList.remove('active'); });
             e.target.classList.add('active');
             activeCategory = e.target.dataset.cat;
             currentPage = 1;
@@ -267,16 +241,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // 事件委托：笔记点击
-    fileList.addEventListener('click', function(e) {
+    fileList.addEventListener('click', function (e) {
         var a = e.target.closest('a[data-link]');
         if (!a) return;
         e.preventDefault();
         Viewer.open(a.dataset.link, a.dataset.title);
     });
 
-    // 事件委托：分页点击
-    pagination.addEventListener('click', function(e) {
+    pagination.addEventListener('click', function (e) {
         var btn = e.target.closest('button[data-page]');
         if (!btn) return;
         var target = Number(btn.dataset.page);
@@ -290,3 +262,108 @@ document.addEventListener('DOMContentLoaded', function() {
 
     applyFilter();
 });
+
+// ============================================
+// 目录模块 Toc（自包含，不依赖任何插件）
+// ============================================
+const Toc = (function () {
+    var tocEl, bodyEl, toggleBtn;
+    var headings = [];
+    var observer = null;
+
+    function slug(text) {
+        return (text || '').trim().toLowerCase()
+            .replace(/[^\w\u4e00-\u9fa5]+/g, '-')
+            .replace(/^-|-$/g, '') || 'h';
+    }
+
+    function build() {
+        if (!tocEl || !bodyEl) return;
+        tocEl.innerHTML = '';
+        headings = [];
+        var nodes = bodyEl.querySelectorAll('h1, h2, h3');
+        if (!nodes.length) {
+            tocEl.innerHTML = '<span class="toc-empty">（本文无标题）</span>';
+            return;
+        }
+        var used = {};
+        Array.prototype.forEach.call(nodes, function (h) {
+            var id = slug(h.textContent), n = 1, base = id;
+            while (used[id]) { n++; id = base + '-' + n; }
+            used[id] = true;
+            h.id = id;                     // 补锚点，原页面零侵入
+            headings.push({ id: id, node: h });
+
+            var a = document.createElement('a');
+            a.href = '#' + id;
+            a.className = 'toc-item toc-l' + h.tagName[1];
+            a.textContent = h.textContent.trim();
+            a.dataset.id = id;
+            a.onclick = function (e) {
+                e.preventDefault();
+                if (h.scrollIntoView) h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                setActive(id);
+            };
+            tocEl.appendChild(a);
+        });
+    }
+
+    function setActive(id) {
+        var items = tocEl.getElementsByClassName('toc-item');
+        for (var i = 0; i < items.length; i++) {
+            items[i].classList.toggle('active', items[i].dataset.id === id);
+        }
+        var cur = tocEl.querySelector('.toc-item.active');
+        if (cur && cur.scrollIntoView) cur.scrollIntoView({ block: 'nearest' });
+    }
+
+    function watch() {
+        if (!window.IntersectionObserver) return null;
+        if (observer) observer.disconnect();
+        observer = new IntersectionObserver(function (entries) {
+            var vis = [];
+            for (var i = 0; i < entries.length; i++) {
+                if (entries[i].isIntersecting) vis.push(entries[i]);
+            }
+            vis.sort(function (a, b) { return a.boundingClientRect.top - b.boundingClientRect.top; });
+            if (vis[0]) setActive(vis[0].target.id);
+        }, { root: bodyEl, rootMargin: '0px 0px -70% 0px' });
+        for (var i = 0; i < headings.length; i++) observer.observe(headings[i].node);
+        return observer;
+    }
+
+    function bindToggle() {
+        if (!toggleBtn) return;
+        toggleBtn.onclick = function () {
+            var collapsed = tocEl.classList.toggle('viewer-toc-collapsed');
+            toggleBtn.classList.toggle('on', !collapsed);
+        };
+        // 快捷键 T（弹窗打开时才生效，且不干扰输入框）
+        document.addEventListener('keydown', function (e) {
+            var overlay = document.getElementById('note-viewer');
+            if ((e.key === 't' || e.key === 'T') &&
+                overlay && overlay.classList.contains('open') &&
+                !/INPUT|TEXTAREA/i.test(e.target.tagName)) {
+                e.preventDefault();
+                toggleBtn.click();
+            }
+        });
+    }
+
+    function refresh() {
+        tocEl = document.getElementById('viewer-toc');
+        bodyEl = document.getElementById('viewer-content');
+        toggleBtn = document.getElementById('toc-toggle');
+        bindToggle();
+        build();
+        watch();
+        if (tocEl && toggleBtn) {
+            // 有标题默认展开，没有则默认收起
+            var hasH = headings.length > 0;
+            tocEl.classList.toggle('viewer-toc-collapsed', !hasH);
+            toggleBtn.classList.toggle('on', hasH);
+        }
+    }
+
+    return { refresh: refresh };
+})();
