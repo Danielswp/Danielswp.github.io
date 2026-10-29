@@ -166,8 +166,6 @@ QMAKE_LFLAGS_WINDOWS += /MANIFESTUAC:"level='requireAdministrator'"
 
 > **💡 设计建议**：这类变量可移植性差，属于"最后手段"。能用 `CONFIG`、`LIBS`、`QMAKE_POST_LINK` 解决的，就不要直接写平台专属 flag。进入 Qt6 / CMake 时代，这些需求通常改用工具链与链接特性来表达。
 
-
-
 **其他高频变量速查**
 
 -----------
