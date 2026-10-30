@@ -10,7 +10,7 @@ const notes = [
     { title: 'QRhi', date: '2026-10-16 00:07:54', link: 'blog/QRhi.md', category: '技术' },
     { title: '颜值即胜利', date: '2026-10-17 20:17:05', link: 'blog/颜值即胜利.md', category: '生活' },
     { title: 'Qt的pro文件配置', date: '2026-10-29 08:43:03', link: 'blog/Qt的pro文件配置.md', category: '技术' },
-    { title: '第六篇笔记', date: '2024-01-06', link: 'notes/note6.md', category: '随笔' },
+    { title: 'DrMemory', date: '2026-10-30 13:03:00', link: 'blog/DrMemory.md', category: '技术' },
     { title: '第七篇笔记', date: '2024-01-07', link: 'notes/note7.md', category: '技术' },
     { title: '第八篇笔记', date: '2024-01-08', link: 'notes/note8.md', category: '生活' },
     { title: '第九篇笔记', date: '2024-01-09', link: 'notes/note9.md', category: '技术' },
