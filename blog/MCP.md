@@ -26,6 +26,22 @@ Anthropic公司推出的AI通用接口，对接Claude,ChatGPT
 
   ![](./MCP/mcp-architecture2.jpg)
 
+# 函数调用 vs RAG vs MCP
+
+- 函数调用：调用各种工具的方式
+
+- RAG：检索文件的方式
+
+- MCP：调用统一工具
+
+
+
+
+
+
+
+
+
 # 开启服务器
 
 uv run python weather_server.py

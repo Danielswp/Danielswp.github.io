@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>快速使用AI</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh; /* 移动端动态视口高度，解决地址栏问题 */
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: #f5f6fa;
+    color: #333;
+  }
+
+  /* ===== 侧边服务栏：移动端变为顶部横向滚动条 ===== */
+  #sidebar {
+    display: flex;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    z-index: 10;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .svc {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    font-size: 12px;
+    color: #555;
+    transition: background .15s;
+  }
+  .svc:active { background: #eef1f7; }
+  .svc .ico { font-size: 22px; }
+  .svc .tag { font-size: 10px; color: #999; }
+  .svc.active { background: #e8f0fe; color: #1a73e8; }
+  .svc.active .tag { color: #1a73e8; }
+
+  /* ===== 主内容区 ===== */
+  main {
+    flex: 1;
+    position: relative;
+    min-height: 0; /* 允许 iframe 正常收缩 */
+  }
+  iframe { width: 100%; height: 100%; border: none; display: block; }
+
+  /* 加载 / 拒绝提示 */
+  .msg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 24px;
+    text-align: center;
+    font-size: 14px;
+    color: #888;
+    background: #fff;
+  }
+  .msg .big { font-size: 48px; }
+  .msg a {
+    display: inline-block;
+    padding: 10px 24px;
+    background: #1a73e8;
+    color: #fff;
+    border-radius: 22px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+  /* ===== 桌面端：侧边栏还原为左侧竖排 ===== */
+  @media (min-width: 768px) {
+    body { flex-direction: row; }
+    #sidebar {
+      flex-direction: column;
+      width: 96px;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 12px 8px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<nav id="sidebar"></nav>
+<main>
+  <div class="msg" id="msg">🟡<br>请选择一个 AI 服务</div>
+  <iframe id="frame" style="display:none" allowfullscreen referrerpolicy="no-referrer"></iframe>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  // 服务列表：[名称, 图标, 标签, URL]
+  var SERVICES = [
+    // 国内主流
+    ['腾讯元宝', '💠', '免费',   'https://yuanbao.tencent.com/'],
+    ['智谱清言', '💎', '免费',   'https://chatglm.cn/'],
+    ['通义千问', '⚡', '免费',   'https://tongyi.aliyun.com/qianwen/'],
+    ['豆包',     '🚫', '免费',   'https://www.doubao.com/chat/'],
+    ['Kimi',     '🌙', '免费',   'https://kimi.moonshot.cn/'],
+    ['文心一言', '🔷', '免费',   'https://yiyan.baidu.com/'],
+    ['DeepSeek', '🐋', '免费',   'https://chat.deepseek.com/'],
+    
+    // 国外主流
+    ['ChatGPT',  '🟩', '免费/限','https://chat.openai.com/'],
+    ['Claude',   '🟣', '免费/限','https://claude.ai/'],
+    ['Gemini',   '🔮', '免费/限','https://gemini.google.com/'],
+    ['Grok',     '𝕏',  '免费/限','https://grok.com/'],
+    ['Perplexity','❓','免费/限','https://www.perplexity.ai/'],
+    ['Copilot',  '🟦', '免费',   'https://copilot.microsoft.com/']
+  ];
+
+
+  var KEY = 'ai_last_svc';
+  var sidebar = document.getElementById('sidebar');
+  var frame   = document.getElementById('frame');
+  var msg     = document.getElementById('msg');
+
+  // 构建按钮
+  SERVICES.forEach(function (s, i) {
+    var btn = document.createElement('button');
+    btn.className = 'svc';
+    btn.innerHTML = '<span class="ico">' + s[1] + '</span>' + s[0] +
+                    '<span class="tag">' + s[2] + '</span>';
+    btn.onclick = function () { select(i); };
+    sidebar.appendChild(btn);
+  });
+
+  function select(i) {
+    var s = SERVICES[i];
+    sidebar.querySelectorAll('.svc').forEach(function (b, j) {
+      b.classList.toggle('active', j === i);
+    });
+    try { localStorage.setItem(KEY, i); } catch (e) {}
+    msg.style.display = 'none';
+    frame.style.display = 'block';
+    if (frame.src !== s[3]) frame.src = s[3];
+    // 移动端：让选中的按钮滚动到可视区
+    sidebar.children[i].scrollIntoView({ block: 'nearest', inline: 'center' });
+  }
+
+  // 恢复上次选择
+  var last = -1;
+  try { last = parseInt(localStorage.getItem(KEY), 10); } catch (e) {}
+  if (last >= 0 && last < SERVICES.length) select(last);
+
+  // iframe 加载失败检测（部分站点拒绝嵌入）
+  frame.addEventListener('error', function () {
+    frame.style.display = 'none';
+    msg.innerHTML = '🚫<br>该服务禁止嵌入<br>' +
+      '<a href="' + frame.src + '" target="_blank" rel="noopener">在新窗口打开</a>';
+    msg.style.display = 'flex';
+  });
+})();
+</script>
+</body>
+</html>
