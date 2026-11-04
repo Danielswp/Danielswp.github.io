@@ -22,7 +22,23 @@ Anthropic公司推出的AI通用接口，对接Claude,ChatGPT
 
 - Prompts：提示词，帮助用户完成特定任务
 
-  ![](./MCP/mcp-architecture.jpg)
+# MCP架构：Host-Client-Server （主机-客户端-服务器）
+
+- Host：AI 应用本身，比如 Claude Desktop 或者你写的聊天程序
+- Client：Host 派出去的“跑腿员”，专门负责跟一个服务器联系
+- Server：干活的，提供具体工具（比如读文件、查数据库）
+
+打个比方：
+
+```
+你（Host）→ 打电话（Client）→ 客服（Server）
+```
+
+* 一个 Host 可以派多个 Client，各连各的 Server，AI 就能用上各种工具了。
+
+* MCP 协议是 Client 和 Server 之间的沟通协议
+
+![](./MCP/mcp-architecture.jpg)
 
   ![](./MCP/mcp-architecture2.jpg)
 
@@ -33,14 +49,6 @@ Anthropic公司推出的AI通用接口，对接Claude,ChatGPT
 - RAG：检索文件的方式
 
 - MCP：调用统一工具
-
-
-
-
-
-
-
-
 
 # 开启服务器
 
