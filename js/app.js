@@ -10,7 +10,7 @@ const notes = [
     { title: 'QRhi', date: '2026-10-16 00:07:54', link: 'blog/QRhi.md', category: '技术' },
     { title: '颜值即胜利', date: '2026-10-17 20:17:05', link: 'blog/颜值即胜利.md', category: '生活' },
     { title: 'Qt的pro文件配置', date: '2026-10-29 08:43:03', link: 'blog/Qt的pro文件配置.md', category: '技术' },
-    { title: 'DrMemory', date: '2026-10-30 13:03:00', link: 'blog/DrMemory.md', category: '技术' },
+    { title: 'DrMemory', date: '2026-10-30 13:00:00', link: 'blog/DrMemory.md', category: '技术' },
     { title: 'Model Context Protocol(MCP)', date: '2026-11-3 14:31:16', link: 'blog/MCP.md', category: '技术' },
     { title: '第八篇笔记', date: '2024-01-08', link: 'notes/note8.md', category: '生活' },
     { title: '第九篇笔记', date: '2024-01-09', link: 'notes/note9.md', category: '技术' },
@@ -60,9 +60,9 @@ function strip(s) { return String(s || '').replace(/<[^>]+>/g, ''); }
 // ============================================
 // 跳转速度（改这里全局生效，毫秒，0 = 瞬时）
 // ============================================
-const SCROLL_DURATION = 0;   // ★ 原来是 smooth 动画，现改为 0
+const SCROLL_DURATION = 0;
 
-// ★ 瞬时/极速滚动：直接设 scrollTop，无惯性、不排队
+// ★ 瞬时/极速滚动
 function fastScroll(el, top) {
     if (!el) return;
     el.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
@@ -112,6 +112,51 @@ function getMd() {
     });
 
     return md;
+}
+
+// ============================================
+// ★ 通用路径替换函数（核心新增）
+// ============================================
+function fixImagePaths(text, link) {
+    // 提取 markdown 文件的上级目录路径
+    // 例如 link = "blog/MCP.md" → dir = "blog/"
+    // 例如 link = "notes/note8.md" → dir = "notes/"
+    var parts = link.split('/');
+    var dir = '';
+    if (parts.length > 1) {
+        // 取最后一级目录作为资源文件夹的上级
+        dir = parts.slice(0, -1).join('/') + '/';
+    }
+    
+    // 情况1: 替换 ![](./assets/xxx.jpg) → ![](/blog/assets/xxx.jpg) 或 /notes/assets/xxx.jpg
+    text = text.replace(/!\[([^\]]*)\]\(\.\/assets\//g, function(match, alt) {
+        return '![' + alt + '](/blog/assets/';
+    });
+    
+    // 情况2: 替换 ![](./MCP/xxx.jpg) → ![](/blog/MCP/xxx.jpg) 或 /notes/MCP/xxx.jpg
+    // 通用规则：将 ./文件夹名/ 替换为 /dir/文件夹名/
+    text = text.replace(/!\[([^\]]*)\]\(\.\/([^\/)]+\/)/g, function(match, alt, folder) {
+        // 如果已经有 /blog/ 或 /notes/ 前缀则跳过
+        if (dir.startsWith('blog/') || dir.startsWith('notes/')) {
+            return '![' + alt + '](/' + dir + folder;
+        }
+        return '![' + alt + '](/' + dir + folder;
+    });
+    
+    // 情况3: 替换 ![](MCP/xxx.jpg) → ![](/blog/MCP/xxx.jpg)（没有 ./ 前缀的情况）
+    text = text.replace(/!\[([^\]]*)\]\(([^\/\)][^\/\)]+\/[^\)]+)\)/g, function(match, alt, path) {
+        // 跳过已经是绝对路径或以 http/https 开头的
+        if (path.startsWith('/') || path.startsWith('http://') || path.startsWith('https://')) {
+            return match;
+        }
+        // 跳过已经在 assets 或已知文件夹下的
+        if (path.startsWith('assets/') || path.startsWith('./assets/')) {
+            return match;
+        }
+        return '![' + alt + '](/' + dir + path;
+    });
+    
+    return text;
 }
 
 // ============================================
@@ -172,6 +217,10 @@ const Viewer = (function () {
             .then(function (text) {
                 var parser = getMd();
                 if (!parser) { show('<p style="color:red;">渲染引擎加载中，请重试</p>'); return; }
+                
+                // ★★★ 核心修改：在渲染前修复图片路径 ★★★
+                text = fixImagePaths(text, link);
+                
                 var html = parser.render(text);
                 if (window.DOMPurify) html = window.DOMPurify.sanitize(html);
                 cache.set(link, html);
@@ -190,7 +239,6 @@ const Viewer = (function () {
         Toc.reset();
     }
 
-    // ★ 瞬时定位：先取消正文正在进行的滚动，再一次性落位
     function jump(id) {
         if (!id) return;
         var el = document.getElementById(id);
@@ -331,7 +379,6 @@ document.addEventListener('DOMContentLoaded', function () {
         if (target >= 1 && target <= totalPages && target !== currentPage) {
             currentPage = target;
             renderPage();
-            // ★ 分页回顶：瞬时，不滑
             window.scrollTo({ top: 0, behavior: 'auto' });
         }
     });
@@ -341,12 +388,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // ============================================
 // 目录模块 Toc
-// ★ 默认收起；点 ☰ / 按 T 展开
 // ============================================
 const Toc = (function () {
     var tocEl = null, bodyEl = null, toggleBtn = null;
     var headings = [];
-    var visible = false;   // ★ 默认关闭
+    var visible = false;
 
     function headingNodes() {
         if (!bodyEl) return [];
@@ -370,7 +416,6 @@ const Toc = (function () {
             return;
         }
 
-        // ★ 只读取已有 id，绝不覆盖
         Array.prototype.forEach.call(nodes, function (h) {
             var id = h.id;
             if (!id) { id = slug(h.textContent); h.id = id; }
@@ -385,14 +430,13 @@ const Toc = (function () {
             a.addEventListener('click', function (e) {
                 e.preventDefault();
                 e.stopPropagation();
-                Viewer.jump(id);                 // 瞬时落位
+                Viewer.jump(id);
                 history.replaceState(null, '', '#' + id);
             });
 
             tocEl.appendChild(a);
         });
 
-        // 有标题才默认收起，保持收起态渲染完再交给 refresh
         hide();
     }
 
@@ -408,7 +452,6 @@ const Toc = (function () {
     }
     function toggle() { visible ? hide() : show(); }
 
-    // 目录自身滚动：瞬时
     function setActive(id) {
         if (!tocEl) return;
         var links = tocEl.getElementsByClassName('toc-item');
@@ -444,7 +487,6 @@ const Toc = (function () {
         build();
         bindToggle();
         var hasH = headings.length > 0;
-        // ★ 有标题 → 默认收起；无标题 → 隐藏按钮
         if (hasH) { hide(); }
         if (toggleBtn) toggleBtn.style.visibility = hasH ? '' : 'hidden';
     }
@@ -461,7 +503,7 @@ const Toc = (function () {
 })();
 
 // ============================================
-// 滚动高亮（只认正文容器）
+// 滚动高亮
 // ============================================
 const ScrollSync = (function () {
     var bodyEl = null, handler = null, rafId = null, lastId = null;

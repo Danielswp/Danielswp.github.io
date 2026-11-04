@@ -22,11 +22,9 @@ Anthropic公司推出的AI通用接口，对接Claude,ChatGPT
 
 - Prompts：提示词，帮助用户完成特定任务
 
-![](MCP/mcp-architecture.jpg)
-![](/blog/MCP/mcp-architecture.jpg)
+  ![](./MCP/mcp-architecture.jpg)
 
-![](MCP/mcp-architecture2.jpg)
-![](/blog/MCP/mcp-architecture2.jpg)
+  ![](./MCP/mcp-architecture2.jpg)
 
 # 开启服务器
 
