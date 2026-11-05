@@ -50,6 +50,20 @@ Anthropic公司推出的AI通用接口，对接Claude,ChatGPT
 
 - MCP：调用统一工具
 
+
+
+# OSI层级
+
+JSONRPC 和 MCP都是应用层，下面http，stdio的传输层支持。
+
+
+
+
+
+
+
+
+
 # 开启服务器
 
 uv run python weather_server.py
