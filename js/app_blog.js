@@ -397,7 +397,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    fileList.addEventListener('click', function (e) {
+    // 全局委托：笔记列表与左侧目录树共用同一套打开逻辑
+    document.addEventListener('click', function (e) {
         var a = e.target.closest('a[data-link]');
         if (!a) return;
         e.preventDefault();
@@ -418,6 +419,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     applyFilter();
     renderItemListLd();
+    renderSidebarTree();
 });
 
 // ============================================
@@ -748,4 +750,34 @@ function initPostPage() {
             console.error('文章加载失败:', note.link, err);
             contentEl.innerHTML = '<p>文章加载失败，请<a href="index.html">返回笔记列表</a>。</p>';
         });
+}
+
+// ============================================
+// 左侧目录树：按分类分组，数据直接取自 notes
+// ============================================
+function renderSidebarTree() {
+    var tree = document.getElementById('sidebar-tree');
+    if (!tree) return;
+
+    var groups = {}, order = [];
+    notes.forEach(function (n) {
+        var cat = n.category || '未分类';
+        if (!groups[cat]) { groups[cat] = []; order.push(cat); }
+        groups[cat].push(n);
+    });
+
+    var html = '';
+    order.forEach(function (cat) {
+        html += '<li><details open><summary>📁 ' + escapeHtml(cat) + '</summary><ul>';
+        groups[cat].forEach(function (n) {
+            html += '<li><a href="' + postUrl(n) + '" data-link="' + escapeHtml(n.link) +
+                '" data-title="' + escapeHtml(strip(n.title)) + '">' +
+                escapeHtml(cleanTitle(n)) + '</a></li>';
+        });
+        html += '</ul></details></li>';
+    });
+    tree.innerHTML = html;
+
+    var count = document.getElementById('sidebar-count');
+    if (count) count.textContent = notes.length;
 }

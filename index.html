@@ -57,6 +57,27 @@
     </script>
 </head>
 <body>
+    <!-- ========== 固定顶部标题栏（不随滚动移动） ========== -->
+    <header class="site-bar">
+        <button type="button" class="sidebar-toggle" id="sidebar-toggle"
+                aria-label="打开目录" aria-controls="sidebar" aria-expanded="false">☰</button>
+        <a class="site-bar-brand" href="index.html">努力！奋斗</a>
+        <span class="site-bar-sub">技术笔记与个人博客</span>
+        <nav class="site-bar-links" aria-label="站点导航">
+            <a href="#notes">笔记</a>
+            <a href="#bookmarks">书签</a>
+            <a href="sitemap.xml">站点地图</a>
+        </nav>
+    </header>
+
+    <!-- ========== 左侧目录树（Windows 资源管理器风格） ========== -->
+    <aside class="sidebar" id="sidebar" aria-label="笔记目录">
+        <div class="sidebar-head">📁 notes/</div>
+        <ul class="tree" id="sidebar-tree"></ul>
+        <div class="sidebar-foot">共 <span id="sidebar-count">0</span> 篇笔记</div>
+    </aside>
+    <div class="sidebar-mask" id="sidebar-mask"></div>
+
     <div class="container">
         <header>
             <h1 class="sr-only">努力！奋斗 — 技术笔记与个人博客</h1>
@@ -73,7 +94,7 @@
             <div class="stats" id="stats"></div>
         </header>
 
-        <main>
+        <main id="notes">
             <div class="search-bar">
                 <span class="search-prompt">$</span>
                 <input type="text" id="search-input" placeholder="grep 搜索笔记..." aria-label="搜索笔记" autocomplete="off">
@@ -101,7 +122,7 @@
         </main>
 
         <!-- ========== 常用站点（网格平铺） ========== -->
-        <section class="bookmarks" aria-label="友情链接">
+        <section class="bookmarks" id="bookmarks" aria-label="友情链接">
             <div class="bookmarks-title"><span class="cmd">友情链接</span></div>
             <!-- 国内 AI -->
             <div class="bm-group">
@@ -114,6 +135,7 @@
                     <a href="https://yuanbao.tencent.com/" target="_self" rel="noopener"><span class="ico">🐧</span>腾讯元宝</a>
                     <a href="https://yiyan.baidu.com/" target="_self" rel="noopener"><span class="ico">🅑</span>文心一言</a>
                     <a href="https://xinghuo.xfyun.cn/" target="_self" rel="noopener"><span class="ico">🔥</span>讯飞星火</a>
+                    <a href="https://chatglm.cn/" target="_self" rel="noopener"><span class="ico">🪢</span>智谱清言</a>
                 </div>
             </div>
 
@@ -199,6 +221,30 @@
     <script defer src="js/app_ai.js"></script>
 
     <script>
+        // 窄屏下目录树以抽屉形式开合
+        (function() {
+            var toggle = document.getElementById('sidebar-toggle');
+            var mask = document.getElementById('sidebar-mask');
+            var sidebar = document.getElementById('sidebar');
+            if (!toggle || !mask || !sidebar) return;
+
+            function setOpen(open) {
+                document.body.classList.toggle('sidebar-open', open);
+                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                toggle.setAttribute('aria-label', open ? '关闭目录' : '打开目录');
+            }
+            toggle.addEventListener('click', function() {
+                setOpen(!document.body.classList.contains('sidebar-open'));
+            });
+            mask.addEventListener('click', function() { setOpen(false); });
+            sidebar.addEventListener('click', function(e) {
+                if (e.target.closest('a')) setOpen(false);
+            });
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') setOpen(false);
+            });
+        })();
+
         // 书签分类折叠（支持键盘操作）
         function toggleGroup() {
             this.parentElement.classList.toggle('collapsed');
