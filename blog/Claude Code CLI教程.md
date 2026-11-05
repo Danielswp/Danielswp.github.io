@@ -38,7 +38,8 @@ C:\Users\Administrator\.claude
     "ANTHROPIC_AUTH_TOKEN": "你自己Claude Code的账号 apikeys",
     "ANTHROPIC_BASE_URL": "https://open.bigmodel.cn/api/anthropic",
     "API_TIMEOUT_MS": "3000000",
-    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": 1
+    "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": 1,
+    "DISABLE_AUTOUPDATER": "1"
   }
 }
 ```
