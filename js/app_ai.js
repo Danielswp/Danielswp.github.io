@@ -79,8 +79,12 @@
       cursor: pointer;
       backdrop-filter: blur(4px);
       -webkit-backdrop-filter: blur(4px);
-      transition: background .2s;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .25s, visibility .25s, background .2s;
     }
+    .panel-close-btn.show { opacity: 1; visibility: visible; pointer-events: auto; }
     .panel-close-btn:hover { background: rgba(0,0,0,.65); }
 
     /* ===== 移动端适配 ===== */
@@ -101,18 +105,27 @@
   style.textContent = css;
   document.head.appendChild(style);
 
-  /* ========== 2. 动态创建面板结构（无标题栏） ========== */
+  /* ========== 2. 动态创建面板结构（内容懒加载） ========== */
+  const PANEL_URL = 'ai_page.html';
+  let frameLoaded = false;
+
   const overlay = document.createElement('div');
   overlay.id = 'panel-overlay';
 
   const panel = document.createElement('div');
   panel.id = 'popup-panel';
+  panel.setAttribute('role', 'dialog');
+  panel.setAttribute('aria-modal', 'true');
+  panel.setAttribute('aria-label', '快速使用 AI');
   panel.innerHTML = '<div class="panel-body" id="panel-body"></div>';
+  const panelBody = panel.querySelector('.panel-body');
 
   const closeBtn = document.createElement('button');
   closeBtn.className = 'panel-close-btn';
+  closeBtn.type = 'button';
   closeBtn.innerHTML = '&times;';
   closeBtn.title = '关闭';
+  closeBtn.setAttribute('aria-label', '关闭面板');
 
   document.body.appendChild(overlay);
   document.body.appendChild(panel);
@@ -121,7 +134,21 @@
   /* ========== 3. 开关逻辑 ========== */
   const triggerBtn = document.getElementById('panel-trigger-btn');
 
+  // 用 DOM API 创建 iframe，避免字符串拼接带来的注入风险
+  function setUrl(url) {
+    const frame = document.createElement('iframe');
+    frame.src = url;
+    frame.title = 'AI 服务';
+    frame.setAttribute('allowfullscreen', '');
+    frame.setAttribute('referrerpolicy', 'no-referrer');
+    panelBody.innerHTML = '';
+    panelBody.appendChild(frame);
+    frameLoaded = true;
+  }
+
   function openPanel() {
+    // 首次打开时才加载，减少首屏请求；关闭后保留 iframe 以免丢失会话
+    if (!frameLoaded) setUrl(PANEL_URL);
     overlay.classList.add('show');
     panel.classList.add('show');
     closeBtn.classList.add('show');
@@ -134,13 +161,19 @@
     document.body.classList.remove('panel-open');
   }
 
-  triggerBtn.addEventListener('click', function () {
-    panel.classList.contains('show') ? closePanel() : openPanel();
-  });
+  if (triggerBtn) {
+    triggerBtn.addEventListener('click', function () {
+      panel.classList.contains('show') ? closePanel() : openPanel();
+    });
+  }
   closeBtn.addEventListener('click', closePanel);
   overlay.addEventListener('click', closePanel);
   document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape') closePanel();
+    // 仅面板打开时响应 ESC，避免影响阅读器弹窗
+    if (e.key === 'Escape' && panel.classList.contains('show')) {
+      e.preventDefault();
+      closePanel();
+    }
   });
 
   /* ========== 4. 对外接口 ========== */
@@ -148,14 +181,8 @@
     open: openPanel,
     close: closePanel,
     setContent: function (html) {
-      panel.querySelector('.panel-body').innerHTML = html;
+      panelBody.innerHTML = window.DOMPurify ? window.DOMPurify.sanitize(html) : html;
     },
-    setUrl: function (url) {
-      panel.querySelector('.panel-body').innerHTML =
-        '<iframe src="' + url + '" allowfullscreen></iframe>';
-    }
+    setUrl: setUrl
   };
 })();
-
-
-window.PopupPanel.setUrl('ai_page.html')

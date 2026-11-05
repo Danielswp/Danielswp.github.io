@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+# code/ 为第三方演示项目源码，无需抓取；js、css 保持允许以便搜索引擎正确渲染页面
+Disallow: /code/
+Disallow: /backup.txt
+
+Sitemap: https://danielswp.github.io/sitemap.xml

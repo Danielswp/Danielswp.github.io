@@ -1,18 +1,59 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>努力！奋斗</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>努力！奋斗 | 技术笔记与个人博客</title>
+    <meta name="description" content="努力！奋斗，记录 Qt/C++ 开发、AI 工具、MCP 与技术随笔的个人博客，分享学习笔记、开发工具与实践经验。">
+    <meta name="keywords" content="技术博客,Qt,C++,AI,MCP,Claude Code,开发笔记,工具推荐">
+    <meta name="author" content="Danielswp">
+    <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+    <meta name="theme-color" content="#f6f8fa">
+    <link rel="canonical" href="https://danielswp.github.io/">
+
+    <!-- 社交分享 / Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="努力！奋斗">
+    <meta property="og:locale" content="zh_CN">
+    <meta property="og:title" content="努力！奋斗 | 技术笔记与个人博客">
+    <meta property="og:description" content="记录 Qt/C++ 开发、AI 工具、MCP 与技术随笔的个人博客。">
+    <meta property="og:url" content="https://danielswp.github.io/">
+    <meta property="og:image" content="https://danielswp.github.io/assets/img/BigmodelPoster.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="努力！奋斗 | 技术笔记与个人博客">
+    <meta name="twitter:description" content="记录 Qt/C++ 开发、AI 工具、MCP 与技术随笔的个人博客。">
+    <meta name="twitter:image" content="https://danielswp.github.io/assets/img/BigmodelPoster.png">
+
     <link rel="icon" href="assets/img/head.jpg" type="image/jpeg">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/rollback.css">
     <link rel="stylesheet" href="css/github-markdown.min.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="css/github-dark.min.css" media="print" onload="this.media='all'">
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "@id": "https://danielswp.github.io/#website",
+      "url": "https://danielswp.github.io/",
+      "name": "努力！奋斗",
+      "description": "记录 Qt/C++ 开发、AI 工具、MCP 与技术随笔的个人博客。",
+      "inLanguage": "zh-CN",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://danielswp.github.io/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
 </head>
 <body>
     <div class="container">
         <header>
+            <h1 class="sr-only">努力！奋斗 — 技术笔记与个人博客</h1>
             <div class="terminal-bar">
                 <span class="dot red"></span>
                 <span class="dot yellow"></span>
@@ -29,21 +70,24 @@
         <main>
             <div class="search-bar">
                 <span class="search-prompt">$</span>
-                <input type="text" id="search-input" placeholder="grep 搜索笔记..." autocomplete="off">
+                <input type="text" id="search-input" placeholder="grep 搜索笔记..." aria-label="搜索笔记" autocomplete="off">
                 <span class="search-clear" id="search-clear" style="display:none">✕</span>
             </div>
 
-            <div class="category-bar" id="category-bar">
-                <button class="cat-btn active" data-cat="all">全部</button>
-                <button class="cat-btn" data-cat="技术">技术</button>
-                <button class="cat-btn" data-cat="随笔">随笔</button>
-                <button class="cat-btn" data-cat="生活">生活</button>
-            </div>
+            <nav class="category-bar" id="category-bar" aria-label="笔记分类">
+                <button type="button" class="cat-btn active" data-cat="all">全部</button>
+                <button type="button" class="cat-btn" data-cat="技术">技术</button>
+                <button type="button" class="cat-btn" data-cat="随笔">随笔</button>
+                <button type="button" class="cat-btn" data-cat="生活">生活</button>
+            </nav>
 
             <div id="loading" class="loading">
                 <span class="blink">读取中...</span>
             </div>
             <ul id="file-list" class="note-list" style="display:none"></ul>
+            <noscript>
+                <p class="empty">笔记列表需要 JavaScript 才能显示，也可以浏览 <a href="sitemap.xml">站点地图</a> 查看全部文章。</p>
+            </noscript>
             <div id="empty" class="empty" style="display:none">
                 <p>~ 暂无笔记 ~</p>
             </div>
@@ -51,14 +95,12 @@
         </main>
 
         <!-- ========== 常用站点（网格平铺） ========== -->
-        <div class="bookmarks">
+        <section class="bookmarks" aria-label="友情链接">
             <div class="bookmarks-title"><span class="cmd">友情链接</span></div>
             <!-- 国内 AI -->
             <div class="bm-group">
                 <div class="bm-group-title">🤖 国内 AI</div>	
                 <div class="bookmark-grid">
-				
-				<a href="./plugins/text-editor/index.html" target="_self" rel="noopener"><span class="ico">🧠</span>编辑器</a>
 				<a href="https://rank.opencompass.org.cn/leaderboard/llm" target="_self" rel="noopener"><span class="ico">🚀</span>AI排名</a>
                     <a href="https://chat.deepseek.com/" target="_self" rel="noopener"><span class="ico">🧠</span>DeepSeek</a>
                     <a href="https://tongyi.aliyun.com/" target="_self" rel="noopener"><span class="ico">🌩️</span>通义千问</a>
@@ -125,7 +167,7 @@
                     <a href="https://www.sspai.com/" target="_self" rel="noopener"><span class="ico">✨</span>少数派</a>
                 </div>
             </div>
-        </div>
+        </section>
 
         <footer>
             <p>root@blog:~$ <span class="blink">▊</span></p>
@@ -144,44 +186,57 @@
 
 
     <script defer src="js/markdown-it.min.js"></script>
-	<script src="js/markdownItAnchor.umd.js"></script>
+    <script defer src="js/markdownItAnchor.umd.js"></script>
     <script defer src="js/purify.min.js"></script>
     <script defer src="js/highlight.min.js"></script>
     <script defer src="js/app_blog.js"></script>
     <script defer src="js/app_ai.js"></script>
 
     <script>
-        // 书签分类折叠
+        // 书签分类折叠（支持键盘操作）
+        function toggleGroup() {
+            this.parentElement.classList.toggle('collapsed');
+        }
         document.querySelectorAll('.bm-group-title').forEach(function(title) {
-            title.addEventListener('click', function() {
-                this.parentElement.classList.toggle('collapsed');
+            title.setAttribute('role', 'button');
+            title.setAttribute('tabindex', '0');
+            title.addEventListener('click', toggleGroup);
+            title.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleGroup.call(this);
+                }
             });
         });
 
-        // 回到顶部逻辑
+        // 回到顶部：滚动阈值与 footer 可见性统一判定，避免两个监听器互相覆盖
         (function() {
             var btn = document.getElementById('back-to-top');
+            if (!btn) return;
             var threshold = 400;
             var footer = document.querySelector('footer');
-            
+            var footerVisible = false;
+
+            function update() {
+                btn.classList.toggle('show', !footerVisible && window.pageYOffset > threshold);
+            }
+
             if (footer && 'IntersectionObserver' in window) {
                 var observer = new IntersectionObserver(function(entries) {
-                    if (!entries[0].isIntersecting && window.pageYOffset > threshold) {
-                        btn.classList.add('show');
-                    } else {
-                        btn.classList.remove('show');
-                    }
+                    footerVisible = entries[0].isIntersecting;
+                    update();
                 }, { rootMargin: '-80px 0px 0px 0px' });
                 observer.observe(footer);
             }
 
-            window.addEventListener('scroll', function() {
-                btn.classList.toggle('show', window.pageYOffset > threshold);
-            }, { passive: true });
+            window.addEventListener('scroll', update, { passive: true });
+            window.addEventListener('resize', update, { passive: true });
 
             btn.addEventListener('click', function() {
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
+
+            update();
         })();
     </script>
 </body>

@@ -38,9 +38,9 @@ Anthropic公司推出的AI通用接口，对接Claude,ChatGPT
 
 * MCP 协议是 Client 和 Server 之间的沟通协议
 
-![](./MCP/mcp-architecture.jpg)
+![MCP 架构：Host、Client 与 Server 的关系图](./MCP/mcp-architecture.jpg)
 
-  ![](./MCP/mcp-architecture2.jpg)
+![MCP 架构补充说明图](./MCP/mcp-architecture2.jpg)
 
 # 函数调用 vs RAG vs MCP
 

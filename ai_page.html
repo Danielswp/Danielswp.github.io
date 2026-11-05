@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>快速使用AI</title>
+<title>AI 服务导航 | 努力！奋斗</title>
+<meta name="description" content="快速切换 DeepSeek、豆包、Kimi、通义千问、ChatGPT、Claude 等常用 AI 服务的导航页。">
+<!-- 工具聚合页内容均为第三方站点，避免与文章页竞争收录 -->
+<meta name="robots" content="noindex,follow">
+<link rel="icon" href="assets/img/head.jpg" type="image/jpeg">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -82,6 +86,44 @@
     font-size: 14px;
   }
 
+  /* ===== 兜底入口：多数 AI 站点会拒绝 iframe 嵌入（X-Frame-Options / CSP） ===== */
+  #open-new {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    display: none;
+    z-index: 5;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 20px;
+    background: rgba(26,115,232,.92);
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,.2);
+  }
+  #open-new:hover { background: #1557b0; }
+
+  /* 轻提示：不遮挡 iframe */
+  #hint {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 90%;
+    z-index: 5;
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: rgba(0,0,0,.7);
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity .3s;
+  }
+  #hint.show { opacity: 1; }
+
   /* ===== 桌面端：侧边栏还原为左侧竖排 ===== */
   @media (min-width: 768px) {
     body { flex-direction: row; }
@@ -100,8 +142,10 @@
 
 <nav id="sidebar"></nav>
 <main>
-  <div class="msg" id="msg">🟡<br>请选择一个 AI 服务</div>
-  <iframe id="frame" style="display:none" allowfullscreen referrerpolicy="no-referrer"></iframe>
+  <div class="msg" id="msg"><span class="big">🟡</span><br>请选择一个 AI 服务</div>
+  <iframe id="frame" title="AI 服务" style="display:none" allowfullscreen referrerpolicy="no-referrer"></iframe>
+  <div id="hint" role="status" aria-live="polite"></div>
+  <button type="button" id="open-new">↗ 新窗口打开</button>
 </main>
 
 <script>
@@ -133,40 +177,87 @@
   var sidebar = document.getElementById('sidebar');
   var frame   = document.getElementById('frame');
   var msg     = document.getElementById('msg');
+  var hint    = document.getElementById('hint');
+  var openNew = document.getElementById('open-new');
+
+  var currentUrl = '';
+  var hintTimer = null, loadTimer = null, hintShown = false;
 
   // 构建按钮
   SERVICES.forEach(function (s, i) {
     var btn = document.createElement('button');
     btn.className = 'svc';
+    btn.type = 'button';
+    btn.title = '若页面空白，可点右下角按钮在新窗口打开';
     btn.innerHTML = '<span class="ico">' + s[1] + '</span>' + s[0] +
                     '<span class="tag">' + s[2] + '</span>';
     btn.onclick = function () { select(i); };
     sidebar.appendChild(btn);
   });
 
+  function showHint(text) {
+    hint.textContent = text;
+    hint.classList.add('show');
+    clearTimeout(hintTimer);
+    hintTimer = setTimeout(function () { hint.classList.remove('show'); }, 4000);
+  }
+
   function select(i) {
     var s = SERVICES[i];
     sidebar.querySelectorAll('.svc').forEach(function (b, j) {
       b.classList.toggle('active', j === i);
     });
-    try { localStorage.setItem(KEY, i); } catch (e) {}
+    // 存 URL 而非索引：以后调整服务列表顺序也不会恢复错服务
+    try { localStorage.setItem(KEY, s[3]); } catch (e) {}
+
+    currentUrl = s[3];
     msg.style.display = 'none';
     frame.style.display = 'block';
-    if (frame.src !== s[3]) frame.src = s[3];
+    openNew.style.display = 'inline-block';
+    // frame.src 读回的是绝对 URL，与配置值永远不等，会误触发重复加载
+    if (frame.getAttribute('src') !== s[3]) frame.src = s[3];
+
+    clearTimeout(loadTimer);
+    loadTimer = setTimeout(function () {
+      showHint('加载较慢或无法嵌入？点右下角「新窗口打开」');
+    }, 6000);
+
+    if (!hintShown) {
+      hintShown = true;
+      showHint('显示空白？可点右下角「新窗口打开」');
+    }
+
     // 移动端：让选中的按钮滚动到可视区
     sidebar.children[i].scrollIntoView({ block: 'nearest', inline: 'center' });
   }
 
-  // 恢复上次选择
+  // 恢复上次选择（兼容旧版存储的数字索引）
   var last = -1;
-  try { last = parseInt(localStorage.getItem(KEY), 10); } catch (e) {}
-  if (last >= 0 && last < SERVICES.length) select(last);
+  var saved = null;
+  try { saved = localStorage.getItem(KEY); } catch (e) {}
+  if (saved) {
+    if (/^\d+$/.test(saved)) {
+      var idx = parseInt(saved, 10);
+      if (idx >= 0 && idx < SERVICES.length) last = idx;
+    } else {
+      SERVICES.forEach(function (s, i) { if (s[3] === saved) last = i; });
+    }
+  }
+  if (last >= 0) select(last);
 
-  // iframe 加载失败检测（部分站点拒绝嵌入）
+  // 新窗口兜底：X-Frame-Options / CSP 拒绝嵌入时 iframe 只显示空白，
+  // 且通常不会触发 error 事件，因此提供常驻入口供用户手动打开
+  openNew.addEventListener('click', function () {
+    if (currentUrl) window.open(currentUrl, '_blank', 'noopener');
+  });
+
+  frame.addEventListener('load', function () { clearTimeout(loadTimer); });
+
   frame.addEventListener('error', function () {
+    clearTimeout(loadTimer);
     frame.style.display = 'none';
-    msg.innerHTML = '🚫<br>该服务禁止嵌入<br>' +
-      '<a href="' + frame.src + '" target="_blank" rel="noopener">在新窗口打开</a>';
+    msg.innerHTML = '<span class="big">🚫</span><br>该服务无法在页面内打开<br>' +
+      '<a href="' + currentUrl + '" target="_blank" rel="noopener">在新窗口打开</a>';
     msg.style.display = 'flex';
   });
 })();

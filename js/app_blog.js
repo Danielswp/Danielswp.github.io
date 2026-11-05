@@ -2,35 +2,42 @@
 // 配置
 // ============================================
 const PAGE_SIZE = 20;
+const SITE_ORIGIN = 'https://danielswp.github.io';
+const SITE_NAME = '努力！奋斗';
 let currentPage = 1;
 
+// slug 决定文章落地页 URL，新增文章时一并填写（小写字母、数字、连字符）
 const notes = [
-    { title: '<font style=\'color:green\'>【置顶】<\/font>本站故事', date: '2026-10-15 23:37:53', link: 'readme.md', category: '技术' },
-    { title: '<font style=\'color:red\'>【强推】<\/font>软件推荐', date: '2026-10-15 23:37:58', link: 'blog/软件推荐.md', category: '分享' },
-    { title: 'QRhi', date: '2026-10-16 00:07:54', link: 'blog/QRhi.md', category: '技术' },
-    { title: '颜值即胜利', date: '2026-10-17 20:17:05', link: 'blog/颜值即胜利.md', category: '生活' },
-    { title: 'Qt的pro文件配置', date: '2026-10-29 08:43:03', link: 'blog/Qt的pro文件配置.md', category: '技术' },
-    { title: 'DrMemory', date: '2026-10-30 13:00:00', link: 'blog/DrMemory.md', category: '技术' },
-    { title: 'Model Context Protocol(MCP)', date: '2026-11-3 14:31:16', link: 'blog/MCP.md', category: '技术' },
-    { title: '第八篇笔记', date: '2024-01-08', link: 'notes/note8.md', category: '生活' },
-    { title: '第九篇笔记', date: '2024-01-09', link: 'notes/note9.md', category: '技术' },
-    { title: '第十篇笔记', date: '2024-01-10', link: 'notes/note10.md', category: '随笔' },
-    { title: '第十一篇笔记', date: '2024-01-11', link: 'notes/note11.md', category: '技术' },
-    { title: '第十二篇笔记', date: '2024-01-12', link: 'notes/note12.md', category: '生活' },
-    { title: '第十篇笔记', date: '2024-01-10', link: 'notes/note10.md', category: '随笔' },
-    { title: '第十一篇笔记', date: '2024-01-11', link: 'notes/note11.md', category: '技术' },
-    { title: '第十二篇笔记', date: '2024-01-12', link: 'notes/note12.md', category: '生活' },
-    { title: '第六篇笔记', date: '2024-01-06', link: 'notes/note6.md', category: '随笔' },
-    { title: '第七篇笔记', date: '2024-01-07', link: 'notes/note7.md', category: '技术' },
-    { title: '第八篇笔记', date: '2024-01-08', link: 'notes/note8.md', category: '生活' },
-    { title: '第九篇笔记', date: '2024-01-09', link: 'notes/note9.md', category: '技术' },
-    { title: '第十篇笔记', date: '2024-01-10', link: 'notes/note10.md', category: '随笔' },
-    { title: '第十一篇笔记', date: '2024-01-11', link: 'notes/note11.md', category: '技术' },
-    { title: '第十二篇笔记', date: '2024-01-12', link: 'notes/note12.md', category: '生活' },
-    { title: '第十篇笔记', date: '2024-01-10', link: 'notes/note10.md', category: '随笔' },
-    { title: '第十一篇笔记', date: '2024-01-11', link: 'notes/note11.md', category: '技术' },
-    { title: '第十二篇笔记', date: '2024-01-12', link: 'notes/note12.md', category: '生活' }
+    { title: '<font style=\'color:green\'>【置顶】<\/font>本站故事', date: '2026-10-15 23:37:53', link: 'readme.md', slug: 'about', category: '技术' },
+    { title: '<font style=\'color:red\'>【强推】<\/font>软件推荐', date: '2026-10-15 23:37:58', link: 'blog/软件推荐.md', slug: 'software', category: '分享' },
+    { title: 'QRhi', date: '2026-10-16 00:07:54', link: 'blog/QRhi.md', slug: 'qrhi', category: '技术' },
+    { title: '颜值即胜利', date: '2026-10-17 20:17:05', link: 'blog/颜值即胜利.md', slug: 'appearance', category: '生活' },
+    { title: 'Qt的pro文件配置', date: '2026-10-29 08:43:03', link: 'blog/Qt的pro文件配置.md', slug: 'qt-pro-config', category: '技术' },
+    { title: 'DrMemory', date: '2026-10-30 13:00:00', link: 'blog/DrMemory.md', slug: 'drmemory', category: '技术' },
+    { title: 'Model Context Protocol(MCP)', date: '2026-11-03 14:31:16', link: 'blog/MCP.md', slug: 'mcp', category: '技术' },
+    { title: 'Claude Code CLI教程', date: '2026-11-05 09:34:50', link: 'blog/Claude Code CLI教程.md', slug: 'claude-code-cli', category: '技术' }
 ];
+
+function postUrl(n) {
+    return 'post.html?s=' + (n.slug || encodeURIComponent(n.link));
+}
+function postAbsoluteUrl(n) {
+    return SITE_ORIGIN + '/' + postUrl(n);
+}
+function cleanTitle(n) {
+    return strip(n.title).replace(/^【[^】]+】/, '');
+}
+function escapeHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+function toISODate(s) {
+    // "2026-10-15 23:37:53" → "2026-10-15T23:37:53+08:00"
+    var m = String(s).match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?: (\d{2}:\d{2}:\d{2}))?/);
+    if (!m) return '';
+    return m[1] + '-' + ('0' + m[2]).slice(-2) + '-' + ('0' + m[3]).slice(-2) +
+        'T' + (m[4] || '00:00:00') + '+08:00';
+}
 
 // ============================================
 // 缓存 & 状态
@@ -58,11 +65,8 @@ function slug(text) { return idGen.next(text); }
 function strip(s) { return String(s || '').replace(/<[^>]+>/g, ''); }
 
 // ============================================
-// 跳转速度（改这里全局生效，毫秒，0 = 瞬时）
+// 目录跳转（瞬时滚动）
 // ============================================
-const SCROLL_DURATION = 0;
-
-// ★ 瞬时/极速滚动
 function fastScroll(el, top) {
     if (!el) return;
     el.scrollTo({ top: Math.max(0, top), behavior: 'auto' });
@@ -115,48 +119,33 @@ function getMd() {
 }
 
 // ============================================
-// ★ 通用路径替换函数（核心新增）
+// 图片路径重写
+// 内容最终渲染在 index.html 文档内，相对路径以主页 URL 为基准，
+// 故需补上 md 所在目录；不加前导 "/"，以兼容 GitHub Pages 子路径部署。
+// 例：blog/MCP.md 中的 ![](./MCP/a.jpg) → ![](blog/MCP/a.jpg)
 // ============================================
 function fixImagePaths(text, link) {
-    // 提取 markdown 文件的上级目录路径
-    // 例如 link = "blog/MCP.md" → dir = "blog/"
-    // 例如 link = "notes/note8.md" → dir = "notes/"
-    var parts = link.split('/');
-    var dir = '';
-    if (parts.length > 1) {
-        // 取最后一级目录作为资源文件夹的上级
-        dir = parts.slice(0, -1).join('/') + '/';
-    }
-    
-    // 情况1: 替换 ![](./assets/xxx.jpg) → ![](/blog/assets/xxx.jpg) 或 /notes/assets/xxx.jpg
-    text = text.replace(/!\[([^\]]*)\]\(\.\/assets\//g, function(match, alt) {
-        return '![' + alt + '](/blog/assets/';
-    });
-    
-    // 情况2: 替换 ![](./MCP/xxx.jpg) → ![](/blog/MCP/xxx.jpg) 或 /notes/MCP/xxx.jpg
-    // 通用规则：将 ./文件夹名/ 替换为 /dir/文件夹名/
-    text = text.replace(/!\[([^\]]*)\]\(\.\/([^\/)]+\/)/g, function(match, alt, folder) {
-        // 如果已经有 /blog/ 或 /notes/ 前缀则跳过
-        if (dir.startsWith('blog/') || dir.startsWith('notes/')) {
-            return '![' + alt + '](/' + dir + folder;
+    var parts = String(link).split('/');
+    var dir = parts.length > 1 ? parts.slice(0, -1).join('/') + '/' : '';
+    if (!dir) return text;
+
+    return text.replace(/(!\[[^\]]*\]\(\s*)([^\s)]+)([^)]*\))/g, function(match, prefix, rawPath, rest) {
+        // 绝对 URL、协议/数据 URI、站点根路径、纯锚点保持原样
+        if (/^(?:[a-z][a-z0-9+.-]*:|\/|#)/i.test(rawPath)) return match;
+
+        var path = rawPath.replace(/^\.\//, '');
+        var base = dir;
+        // 支持 ../ 回退到上级目录
+        while (path.indexOf('../') === 0 && base) {
+            path = path.slice(3);
+            base = base.replace(/[^/]+\/$/, '');
         }
-        return '![' + alt + '](/' + dir + folder;
+        if (!base) return prefix + path + rest;
+        // 已带目录前缀（如 blog/assets/x.png）时不重复拼接
+        if (path.indexOf(base) === 0) return match;
+
+        return prefix + base + path + rest;
     });
-    
-    // 情况3: 替换 ![](MCP/xxx.jpg) → ![](/blog/MCP/xxx.jpg)（没有 ./ 前缀的情况）
-    text = text.replace(/!\[([^\]]*)\]\(([^\/\)][^\/\)]+\/[^\)]+)\)/g, function(match, alt, path) {
-        // 跳过已经是绝对路径或以 http/https 开头的
-        if (path.startsWith('/') || path.startsWith('http://') || path.startsWith('https://')) {
-            return match;
-        }
-        // 跳过已经在 assets 或已知文件夹下的
-        if (path.startsWith('assets/') || path.startsWith('./assets/')) {
-            return match;
-        }
-        return '![' + alt + '](/' + dir + path;
-    });
-    
-    return text;
 }
 
 // ============================================
@@ -190,7 +179,12 @@ const Viewer = (function () {
         document.getElementById('viewer-close').onclick = close;
         overlay.onclick = function (e) { if (e.target === overlay) close(); };
         document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && overlay.classList.contains('open')) { e.preventDefault(); close(); }
+            if (e.key !== 'Escape' || !overlay.classList.contains('open')) return;
+            // AI 面板叠在上方时，ESC 只交给面板处理，避免两层弹窗同时关闭
+            var aiPanel = document.getElementById('popup-panel');
+            if (aiPanel && aiPanel.classList.contains('show')) return;
+            e.preventDefault();
+            close();
         });
     }
 
@@ -218,7 +212,7 @@ const Viewer = (function () {
                 var parser = getMd();
                 if (!parser) { show('<p style="color:red;">渲染引擎加载中，请重试</p>'); return; }
                 
-                // ★★★ 核心修改：在渲染前修复图片路径 ★★★
+                // 渲染前修复图片相对路径
                 text = fixImagePaths(text, link);
                 
                 var html = parser.render(text);
@@ -299,7 +293,11 @@ function renderPage() {
     var html = '';
     for (var i = 0; i < slice.length; i++) {
         var n = slice[i];
-        html += '<li><a href="#" data-link="' + n.link + '" data-title="' + n.title.replace(/"/g, '&quot;') + '">' +
+        // data-* 只放纯文本，标题里的 <font> 仅用于列表显示
+        var safeLink = escapeHtml(n.link);
+        var safeTitle = escapeHtml(strip(n.title));
+        // href 指向真实落地页：爬虫可跟随、用户可复制链接，点击仍由弹窗接管
+        html += '<li><a href="' + postUrl(n) + '" data-link="' + safeLink + '" data-title="' + safeTitle + '">' +
             '<div class="note-title">' + n.title + '</div>' +
             '<div class="note-date">' + n.date + '</div>' +
         '</a></li>';
@@ -327,6 +325,9 @@ function debounceFilter() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    // 文章落地页与主页共用渲染器，但走独立初始化
+    if (document.getElementById('post-article')) { initPostPage(); return; }
+
     fileList = document.getElementById('file-list');
     pagination = document.getElementById('pagination');
     loading = document.getElementById('loading');
@@ -342,6 +343,9 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
     if (clearBtn) {
+        clearBtn.setAttribute('role', 'button');
+        clearBtn.setAttribute('tabindex', '0');
+        clearBtn.setAttribute('aria-label', '清空搜索');
         clearBtn.addEventListener('click', function () {
             input.value = '';
             searchQuery = '';
@@ -350,10 +354,39 @@ document.addEventListener('DOMContentLoaded', function () {
             applyFilter();
             input.focus();
         });
+        clearBtn.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                clearBtn.click();
+            }
+        });
+    }
+
+    // 支持 /?q=关键词 直达搜索结果，对应 WebSite 结构化数据里的 SearchAction
+    var q = new URLSearchParams(location.search).get('q');
+    if (input && q) {
+        input.value = q;
+        searchQuery = q.trim();
+        if (clearBtn) clearBtn.style.display = searchQuery ? 'inline' : 'none';
     }
 
     var bar = document.getElementById('category-bar');
     if (bar) {
+        // 依据文章数据自动补全分类按钮，避免新增分类后 HTML 里漏配（如"分享"）
+        notes.forEach(function (n) {
+            var cat = n.category;
+            if (!cat) return;
+            var exists = Array.prototype.some.call(bar.querySelectorAll('.cat-btn'), function (b) {
+                return b.dataset.cat === cat;
+            });
+            if (exists) return;
+            var btn = document.createElement('button');
+            btn.className = 'cat-btn';
+            btn.dataset.cat = cat;
+            btn.textContent = cat;
+            bar.appendChild(btn);
+        });
+
         bar.addEventListener('click', function (e) {
             if (!e.target.classList.contains('cat-btn')) return;
             bar.querySelectorAll('.cat-btn').forEach(function (b) { b.classList.remove('active'); });
@@ -384,6 +417,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     applyFilter();
+    renderItemListLd();
 });
 
 // ============================================
@@ -553,3 +587,165 @@ const ScrollSync = (function () {
     }
     return { bind: bind, unbind: unbind };
 })();
+
+// ============================================
+// SEO：结构化数据 / meta 写入 / 文章落地页
+// ============================================
+function appendLd(obj) {
+    var s = document.createElement('script');
+    s.type = 'application/ld+json';
+    // 避免正文里出现 </script> 提前闭合脚本
+    s.textContent = JSON.stringify(obj).replace(/</g, '\\u003c');
+    document.head.appendChild(s);
+}
+
+function setMeta(attr, key, value) {
+    var el = document.head.querySelector('meta[' + attr + '="' + key + '"]');
+    if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, key);
+        document.head.appendChild(el);
+    }
+    el.setAttribute('content', value);
+}
+
+function renderItemListLd() {
+    appendLd({
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        'name': SITE_NAME + ' 的全部笔记',
+        'itemListElement': notes.map(function (n, i) {
+            return {
+                '@type': 'ListItem',
+                'position': i + 1,
+                'name': cleanTitle(n),
+                'url': postAbsoluteUrl(n)
+            };
+        })
+    });
+}
+
+function renderPostNeighbors(index) {
+    var box = document.getElementById('post-neighbors');
+    if (!box) return;
+    var parts = [];
+    if (index > 0) {
+        parts.push('<a href="' + postUrl(notes[index - 1]) + '">← ' +
+            escapeHtml(cleanTitle(notes[index - 1])) + '</a>');
+    }
+    if (index < notes.length - 1) {
+        parts.push('<a href="' + postUrl(notes[index + 1]) + '">' +
+            escapeHtml(cleanTitle(notes[index + 1])) + ' →</a>');
+    }
+    box.innerHTML = parts.join('');
+}
+
+// 每篇文章拥有独立 URL、独立的 title/description/canonical 与 BlogPosting 数据
+function initPostPage() {
+    var params = new URLSearchParams(location.search);
+    var slug = params.get('s');
+    var link = params.get('p');
+    var note = null, index = -1;
+
+    // 严格按白名单匹配，避免通过参数读取任意文件
+    for (var i = 0; i < notes.length; i++) {
+        if ((slug && notes[i].slug === slug) || (link && notes[i].link === link)) {
+            note = notes[i]; index = i; break;
+        }
+    }
+
+    var titleEl = document.getElementById('post-title');
+    var contentEl = document.getElementById('post-content');
+    if (!contentEl) return;
+    if (!note) {
+        if (titleEl) titleEl.textContent = '文章不存在';
+        contentEl.innerHTML = '<p>没有找到这篇文章，请<a href="index.html">返回笔记列表</a>。</p>';
+        setMeta('name', 'robots', 'noindex,follow');
+        return;
+    }
+
+    var title = cleanTitle(note);
+    var url = postAbsoluteUrl(note);
+    var iso = toISODate(note.date);
+    var fallbackDesc = title + ' — ' + SITE_NAME + '的' + note.category + '笔记，发布于 ' + note.date + '。';
+
+    document.title = title + ' | ' + SITE_NAME;
+    setMeta('name', 'description', fallbackDesc);
+    setMeta('property', 'og:type', 'article');
+    setMeta('property', 'og:title', document.title);
+    setMeta('property', 'og:url', url);
+    setMeta('property', 'og:description', fallbackDesc);
+    setMeta('property', 'article:published_time', iso);
+    setMeta('property', 'article:section', note.category);
+    setMeta('name', 'twitter:title', document.title);
+    setMeta('name', 'twitter:description', fallbackDesc);
+
+    var canonical = document.head.querySelector('link[rel="canonical"]');
+    if (canonical) canonical.href = url;
+
+    if (titleEl) titleEl.textContent = title;
+    var crumb = document.getElementById('post-crumb');
+    if (crumb) crumb.textContent = title;
+    var metaEl = document.getElementById('post-meta');
+    if (metaEl) metaEl.textContent = '分类：' + note.category + ' · 发布于 ' + note.date;
+
+    renderPostNeighbors(index);
+    appendLd({
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        'itemListElement': [
+            { '@type': 'ListItem', 'position': 1, 'name': '首页', 'item': SITE_ORIGIN + '/' },
+            { '@type': 'ListItem', 'position': 2, 'name': title, 'item': url }
+        ]
+    });
+
+    fetch(note.link)
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+        .then(function (text) {
+            var parser = getMd();
+            if (!parser) throw new Error('Markdown 渲染引擎未加载');
+            var html = parser.render(fixImagePaths(text, note.link));
+            if (window.DOMPurify) html = window.DOMPurify.sanitize(html);
+            contentEl.innerHTML = html;
+
+            // 每页只保留一个 h1：正文首个 h1 降级为 h2
+            var firstH1 = contentEl.querySelector('h1');
+            if (firstH1) {
+                var h2 = document.createElement('h2');
+                h2.innerHTML = firstH1.innerHTML;
+                if (firstH1.id) h2.id = firstH1.id;
+                firstH1.parentNode.replaceChild(h2, firstH1);
+            }
+
+            // 用正文文本生成更准确的描述
+            var tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            var desc = (tmp.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 150);
+            if (desc) {
+                setMeta('name', 'description', desc);
+                setMeta('property', 'og:description', desc);
+                setMeta('name', 'twitter:description', desc);
+            }
+
+            appendLd({
+                '@context': 'https://schema.org',
+                '@type': 'BlogPosting',
+                'headline': title,
+                'description': desc || fallbackDesc,
+                'datePublished': iso,
+                'dateModified': iso,
+                'inLanguage': 'zh-CN',
+                'articleSection': note.category,
+                'url': url,
+                'mainEntityOfPage': { '@type': 'WebPage', '@id': url },
+                'image': SITE_ORIGIN + '/assets/img/BigmodelPoster.png',
+                'author': { '@type': 'Person', 'name': 'Danielswp' },
+                'publisher': { '@type': 'Organization', 'name': SITE_NAME },
+                'isPartOf': { '@type': 'Blog', '@id': SITE_ORIGIN + '/#website' }
+            });
+        })
+        .catch(function (err) {
+            console.error('文章加载失败:', note.link, err);
+            contentEl.innerHTML = '<p>文章加载失败，请<a href="index.html">返回笔记列表</a>。</p>';
+        });
+}
