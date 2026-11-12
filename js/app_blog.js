@@ -15,7 +15,8 @@ const notes = [
     { title: 'Qt的pro文件配置', date: '2026-10-29 08:43:03', link: 'blog/Qt的pro文件配置.md', slug: 'qt-pro-config', category: '技术' },
     { title: 'DrMemory', date: '2026-10-30 13:00:00', link: 'blog/DrMemory.md', slug: 'drmemory', category: '技术' },
     { title: 'Model Context Protocol(MCP)', date: '2026-11-03 14:31:16', link: 'blog/MCP.md', slug: 'mcp', category: '技术' },
-    { title: 'Claude Code CLI教程', date: '2026-11-05 09:34:50', link: 'blog/Claude Code CLI教程.md', slug: 'claude-code-cli', category: '技术' }
+    { title: 'Claude Code CLI教程', date: '2026-11-05 09:34:50', link: 'blog/Claude Code CLI教程.md', slug: 'claude-code-cli', category: '技术' },
+	{ title: '任天堂历代主机', date: '2026-11-05 09:34:50', link: 'blog/任天堂历代主机.md', slug: 'Nintendo', category: '御宅' }	
 ];
 
 function postUrl(n) {
