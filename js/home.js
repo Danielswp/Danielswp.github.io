@@ -24,8 +24,6 @@
 
     const hero = `
 <section class="hero" aria-label="站点介绍与搜索">
-    <h1 class="hero-logo"><span class="c-blue">努</span><span class="c-red">力</span><span class="c-yellow">！</span><span class="c-blue">奋</span><span class="c-green">斗</span></h1>
-    <p class="hero-sub">技术笔记与个人博客</p>
     <div class="search-bar">
         <svg class="search-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15.5 14h-.79l-.28-.27A6.47 6.47 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0A4.5 4.5 0 1 1 14 9.5 4.5 4.5 0 0 1 9.5 14z"/></svg>
         <input type="text" id="search-input" placeholder="搜索笔记..." aria-label="搜索笔记" autocomplete="off">
