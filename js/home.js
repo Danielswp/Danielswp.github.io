@@ -75,7 +75,8 @@
     // 在线阅读：新增 PDF 时在这里追加 { title, file }
     const pdfBooks = [
         { title: '跟我一起写 Makefile', file: 'assets/pdf/跟我一起写Makefile_陈皓.pdf' },
-        { title: '大话设计模式C++', file: 'assets/pdf/大话设计模式C++.pdf' }
+        { title: '大话设计模式C++', file: 'assets/pdf/大话设计模式C++.pdf' },
+		{ title: '周易', file: 'assets/pdf/周易.pdf' }
     ];
 
     function renderPdfs() {
