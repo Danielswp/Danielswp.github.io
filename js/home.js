@@ -7,10 +7,10 @@
     <button type="button" class="sidebar-toggle" id="sidebar-toggle" aria-label="打开目录" aria-controls="sidebar" aria-expanded="false">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
     </button>
-    <a class="site-bar-brand" href="index.html"><span class="brand-g" aria-hidden="true">G</span><span>努力！奋斗</span></a>
-    <span class="site-bar-sub">技术笔记与个人博客</span>
+    <a class="site-bar-brand" href="index.html"></a>
+    
     <nav class="site-bar-links" aria-label="站点导航">
-        <a href="#notes">笔记</a><a href="#pdfs">PDF</a><a href="#bookmarks">书签</a><a href="sitemap.xml">站点地图</a>
+        <a href="#notes">笔记</a><a href="#pdfs">PDF</a><a href="#bookmarks">书签</a>
     </nav>
 </header>`;
 
@@ -47,7 +47,7 @@
 <main id="notes" class="results">
     <div id="loading" class="loading"><span class="blink">读取中...</span></div>
     <ul id="file-list" class="note-list" style="display:none"></ul>
-    <noscript><p class="empty">笔记列表需要 JavaScript 才能显示，也可以浏览 <a href="sitemap.xml">站点地图</a> 查看全部文章。</p></noscript>
+    <noscript><p class="empty">笔记列表需要 JavaScript 才能显示。</p></noscript>
     <div id="empty" class="empty" style="display:none"><p>~ 暂无笔记 ~</p></div>
     <nav id="pagination" class="pagination" aria-label="笔记分页"></nav>
 </main>`;
@@ -98,7 +98,7 @@
 
     const footerHtml = `
 <footer>
-    <div><a href="sitemap.xml">站点地图</a><a href="readme.md">关于本站</a><a href="https://github.com/Danielswp" rel="noopener">GitHub</a></div>
+    <div><a href="readme.md">关于本站</a><a href="https://github.com/Danielswp" rel="noopener">GitHub</a></div>
     <p>努力！奋斗 · 技术笔记与个人博客</p>
     <p class="footer-hint">按 / 快速搜索 · 点击笔记查看 · ESC 关闭</p>
 </footer>
@@ -128,20 +128,36 @@
     const $ = function (id) { return document.getElementById(id); };
     let closeSidebar = function () {};
 
-    // 窄屏目录抽屉
+    // 目录栏：宽屏收起/展开，窄屏抽屉
     const toggle = $('sidebar-toggle');
     const mask = $('sidebar-mask');
     const sidebarEl = $('sidebar');
     if (toggle && mask && sidebarEl) {
-        const setOpen = function (open) {
-            document.body.classList.toggle('sidebar-open', open);
-            toggle.setAttribute('aria-expanded', String(open));
-            toggle.setAttribute('aria-label', open ? '关闭目录' : '打开目录');
+        const isNarrow = function () { return window.matchMedia('(max-width: 1199px)').matches; };
+        const isOpen = function () {
+            return isNarrow()
+                ? document.body.classList.contains('sidebar-open')
+                : !document.body.classList.contains('sidebar-collapsed');
         };
-        closeSidebar = function () { setOpen(false); };
-        toggle.onclick = function () { setOpen(!document.body.classList.contains('sidebar-open')); };
+        const syncLabel = function () {
+            const open = isOpen();
+            toggle.setAttribute('aria-expanded', String(open));
+            toggle.setAttribute('aria-label', open ? '收起目录' : '展开目录');
+        };
+        const setOpen = function (open) {
+            if (isNarrow()) {
+                document.body.classList.toggle('sidebar-open', open);
+            } else {
+                document.body.classList.toggle('sidebar-collapsed', !open);
+            }
+            syncLabel();
+        };
+        closeSidebar = function () { if (isNarrow()) setOpen(false); };
+        toggle.onclick = function () { setOpen(!isOpen()); };
         mask.onclick = closeSidebar;
         sidebarEl.onclick = function (e) { if (e.target.closest('a')) closeSidebar(); };
+        window.addEventListener('resize', syncLabel);
+        syncLabel();
     }
 
     // 回到顶部
