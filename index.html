@@ -1,12 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <!-- 谷歌广告 -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6092216118708562"
-     crossorigin="anonymous"></script>
-    <!-- 谷歌广告 End -->
-
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>努力！奋斗 | 技术笔记与个人博客</title>
@@ -14,7 +8,7 @@
     <meta name="keywords" content="技术博客,Qt,C++,AI,MCP,Claude Code,开发笔记,工具推荐">
     <meta name="author" content="Danielswp">
     <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
-    <meta name="theme-color" content="#f6f8fa">
+    <meta name="theme-color" content="#ffffff">
     <link rel="canonical" href="https://danielswp.github.io/">
 
     <!-- 社交分享 / Open Graph -->
@@ -32,7 +26,6 @@
 
     <link rel="icon" href="assets/img/head.jpg" type="image/jpeg">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/rollback.css">
     <link rel="stylesheet" href="css/github-markdown.min.css" media="print" onload="this.media='all'">
     <link rel="stylesheet" href="css/github-dark.min.css" media="print" onload="this.media='all'">
 
@@ -57,239 +50,15 @@
     </script>
 </head>
 <body>
-    <!-- ========== 固定顶部标题栏（不随滚动移动） ========== -->
-    <header class="site-bar">
-        <button type="button" class="sidebar-toggle" id="sidebar-toggle"
-                aria-label="打开目录" aria-controls="sidebar" aria-expanded="false">☰</button>
-        <a class="site-bar-brand" href="index.html">努力！奋斗</a>
-        <span class="site-bar-sub">技术笔记与个人博客</span>
-        <nav class="site-bar-links" aria-label="站点导航">
-            <a href="#notes">笔记</a>
-            <a href="#bookmarks">书签</a>
-            <a href="sitemap.xml">站点地图</a>
-        </nav>
-    </header>
+    <!-- 页面结构与交互集中由 js/home.js 装配 -->
+    <div id="app"></div>
 
-    <!-- ========== 左侧目录树（Windows 资源管理器风格） ========== -->
-    <aside class="sidebar" id="sidebar" aria-label="笔记目录">
-        <div class="sidebar-head">📁 notes/</div>
-        <ul class="tree" id="sidebar-tree"></ul>
-        <div class="sidebar-foot">共 <span id="sidebar-count">0</span> 篇笔记</div>
-    </aside>
-    <div class="sidebar-mask" id="sidebar-mask"></div>
-
-    <div class="container">
-        <header>
-            <h1 class="sr-only">努力！奋斗 — 技术笔记与个人博客</h1>
-            <div class="terminal-bar">
-                <span class="dot red"></span>
-                <span class="dot yellow"></span>
-                <span class="dot green"></span>
-                <span class="title">visitor@localhost:~</span>
-            </div>
-            <div class="prompt-line">
-                <span class="cmd">ls -1 notes/</span>
-                <span class="blink">▊</span>
-            </div>
-            <div class="stats" id="stats"></div>
-        </header>
-
-        <main id="notes">
-            <div class="search-bar">
-                <span class="search-prompt">$</span>
-                <input type="text" id="search-input" placeholder="grep 搜索笔记..." aria-label="搜索笔记" autocomplete="off">
-                <span class="search-clear" id="search-clear" style="display:none">✕</span>
-            </div>
-
-            <nav class="category-bar" id="category-bar" aria-label="笔记分类">
-                <button type="button" class="cat-btn active" data-cat="all">全部</button>
-                <button type="button" class="cat-btn" data-cat="技术">技术</button>
-                <button type="button" class="cat-btn" data-cat="随笔">随笔</button>
-                <button type="button" class="cat-btn" data-cat="生活">生活</button>
-            </nav>
-
-            <div id="loading" class="loading">
-                <span class="blink">读取中...</span>
-            </div>
-            <ul id="file-list" class="note-list" style="display:none"></ul>
-            <noscript>
-                <p class="empty">笔记列表需要 JavaScript 才能显示，也可以浏览 <a href="sitemap.xml">站点地图</a> 查看全部文章。</p>
-            </noscript>
-            <div id="empty" class="empty" style="display:none">
-                <p>~ 暂无笔记 ~</p>
-            </div>
-            <nav id="pagination" class="pagination"></nav>
-        </main>
-
-        <!-- ========== 常用站点（网格平铺） ========== -->
-        <section class="bookmarks" id="bookmarks" aria-label="友情链接">
-            <div class="bookmarks-title"><span class="cmd">友情链接</span></div>
-            <!-- 国内 AI -->
-            <div class="bm-group">
-                <div class="bm-group-title">🤖 国内 AI</div>	
-                <div class="bookmark-grid">
-				<a href="https://rank.opencompass.org.cn/leaderboard/llm" target="_self" rel="noopener"><span class="ico">🚀</span>AI排名</a>
-                    <a href="https://chat.deepseek.com/" target="_self" rel="noopener"><span class="ico">🧠</span>DeepSeek</a>
-                    <a href="https://tongyi.aliyun.com/" target="_self" rel="noopener"><span class="ico">🌩️</span>通义千问</a>
-                    <a href="https://www.doubao.com/" target="_self" rel="noopener"><span class="ico">🫘</span>豆包</a>
-                    <a href="https://yuanbao.tencent.com/" target="_self" rel="noopener"><span class="ico">🐧</span>腾讯元宝</a>
-                    <a href="https://yiyan.baidu.com/" target="_self" rel="noopener"><span class="ico">🅑</span>文心一言</a>
-                    <a href="https://xinghuo.xfyun.cn/" target="_self" rel="noopener"><span class="ico">🔥</span>讯飞星火</a>
-                    <a href="https://chatglm.cn/" target="_self" rel="noopener"><span class="ico">🪢</span>智谱清言</a>
-                </div>
-            </div>
-
-            <!-- 国际 AI -->
-            <div class="bm-group">
-                <div class="bm-group-title">🌐 国际 AI</div>
-                <div class="bookmark-grid">
-                    <a href="https://chat.openai.com/" target="_self" rel="noopener"><span class="ico">🤖</span>ChatGPT</a>
-                    <a href="https://claude.ai/" target="_self" rel="noopener"><span class="ico">📎</span>Claude</a>
-                    <a href="https://gemini.google.com/" target="_self" rel="noopener"><span class="ico">✨</span>Gemini</a>
-                </div>
-            </div>
-
-            <!-- 搜索 -->
-            <div class="bm-group">
-                <div class="bm-group-title">🔎 搜索</div>
-                <div class="bookmark-grid">
-                    <a href="https://www.baidu.com/" target="_self" rel="noopener"><span class="ico">🐾</span>百度</a>
-                    <a href="https://www.bing.com/" target="_self" rel="noopener"><span class="ico">🪟</span>Bing</a>
-                    <a href="https://www.google.com/" target="_self" rel="noopener"><span class="ico">G</span>Google</a>
-                    <a href="https://www.sogou.com/" target="_self" rel="noopener"><span class="ico">🔍</span>搜狗</a>
-                </div>
-            </div>
-
-            <!-- 视频 / 新闻 -->
-            <div class="bm-group">
-                <div class="bm-group-title">📺 视频 / 新闻</div>
-                <div class="bookmark-grid">
-                    <a href="https://www.bilibili.com/" target="_self" rel="noopener"><span class="ico">📺</span>B 站</a>
-                    <a href="https://www.youtube.com/" target="_self" rel="noopener"><span class="ico">▶️</span>YouTube</a>
-                    <a href="https://www.toutiao.com/" target="_self" rel="noopener"><span class="ico">📰</span>今日头条</a>
-                    <a href="https://www.zhihu.com/" target="_self" rel="noopener"><span class="ico">📘</span>知乎</a>
-                    <a href="https://www.tophub.today/" target="_self" rel="noopener"><span class="ico">🔥</span>今日热榜</a>
-                </div>
-            </div>
-
-            <!-- 开发者 -->
-            <div class="bm-group">
-                <div class="bm-group-title">🛠 开发者</div>
-                <div class="bookmark-grid">
-                    <a href="https://juejin.cn/" target="_self" rel="noopener"><span class="ico">⚡</span>掘金</a>
-                    <a href="https://www.csdn.net/" target="_self" rel="noopener"><span class="ico">💻</span>CSDN</a>
-                    <a href="https://www.cnblogs.com/" target="_self" rel="noopener"><span class="ico">📝</span>博客园</a>
-                    <a href="https://gitee.com/" target="_self" rel="noopener"><span class="ico">🌳</span>Gitee</a>
-                    <a href="https://developer.mozilla.org/zh-CN/" target="_self" rel="noopener"><span class="ico">🦊</span>MDN</a>
-                    <a href="https://www.runoob.com/" target="_self" rel="noopener"><span class="ico">📖</span>菜鸟教程</a>
-                </div>
-            </div>
-
-            <!-- 文档效率 -->
-            <div class="bm-group">
-                <div class="bm-group-title">📚 文档 / 效率</div>
-                <div class="bookmark-grid">
-                    <a href="https://www.yuque.com/" target="_self" rel="noopener"><span class="ico">📚</span>语雀</a>
-                    <a href="https://docs.qq.com/" target="_self" rel="noopener"><span class="ico">📄</span>腾讯文档</a>
-                    <a href="https://www.feishu.cn/" target="_self" rel="noopener"><span class="ico">☁️</span>飞书</a>
-                    <a href="https://www.sspai.com/" target="_self" rel="noopener"><span class="ico">✨</span>少数派</a>
-                </div>
-            </div>
-        </section>
-
-        <footer>
-            <p>root@blog:~$ <span class="blink">▊</span></p>
-            <p class="footer-hint">点击笔记查看 · ESC 关闭 · ? 帮助</p>
-        </footer>
-    </div>
-
-    <!-- ========== 回到顶部按钮 ========== -->
-    <button id="back-to-top" aria-label="回到顶部">
-        <span class="arrow-up"></span>
-    </button>
-	
-	
-	<button id="panel-trigger-btn">快速使用 AI</button>
-	
-
-
+    <script defer src="js/home.js"></script>
     <script defer src="js/markdown-it.min.js"></script>
     <script defer src="js/markdownItAnchor.umd.js"></script>
     <script defer src="js/purify.min.js"></script>
     <script defer src="js/highlight.min.js"></script>
     <script defer src="js/app_blog.js"></script>
     <script defer src="js/app_ai.js"></script>
-
-    <script>
-        // 窄屏下目录树以抽屉形式开合
-        (function() {
-            var toggle = document.getElementById('sidebar-toggle');
-            var mask = document.getElementById('sidebar-mask');
-            var sidebar = document.getElementById('sidebar');
-            if (!toggle || !mask || !sidebar) return;
-
-            function setOpen(open) {
-                document.body.classList.toggle('sidebar-open', open);
-                toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-                toggle.setAttribute('aria-label', open ? '关闭目录' : '打开目录');
-            }
-            toggle.addEventListener('click', function() {
-                setOpen(!document.body.classList.contains('sidebar-open'));
-            });
-            mask.addEventListener('click', function() { setOpen(false); });
-            sidebar.addEventListener('click', function(e) {
-                if (e.target.closest('a')) setOpen(false);
-            });
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape') setOpen(false);
-            });
-        })();
-
-        // 书签分类折叠（支持键盘操作）
-        function toggleGroup() {
-            this.parentElement.classList.toggle('collapsed');
-        }
-        document.querySelectorAll('.bm-group-title').forEach(function(title) {
-            title.setAttribute('role', 'button');
-            title.setAttribute('tabindex', '0');
-            title.addEventListener('click', toggleGroup);
-            title.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    toggleGroup.call(this);
-                }
-            });
-        });
-
-        // 回到顶部：滚动阈值与 footer 可见性统一判定，避免两个监听器互相覆盖
-        (function() {
-            var btn = document.getElementById('back-to-top');
-            if (!btn) return;
-            var threshold = 400;
-            var footer = document.querySelector('footer');
-            var footerVisible = false;
-
-            function update() {
-                btn.classList.toggle('show', !footerVisible && window.pageYOffset > threshold);
-            }
-
-            if (footer && 'IntersectionObserver' in window) {
-                var observer = new IntersectionObserver(function(entries) {
-                    footerVisible = entries[0].isIntersecting;
-                    update();
-                }, { rootMargin: '-80px 0px 0px 0px' });
-                observer.observe(footer);
-            }
-
-            window.addEventListener('scroll', update, { passive: true });
-            window.addEventListener('resize', update, { passive: true });
-
-            btn.addEventListener('click', function() {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            });
-
-            update();
-        })();
-    </script>
 </body>
 </html>

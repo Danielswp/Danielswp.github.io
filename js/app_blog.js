@@ -300,13 +300,14 @@ function renderPage() {
         // href 指向真实落地页：爬虫可跟随、用户可复制链接，点击仍由弹窗接管
         html += '<li><a href="' + postUrl(n) + '" data-link="' + safeLink + '" data-title="' + safeTitle + '">' +
             '<div class="note-title">' + n.title + '</div>' +
-            '<div class="note-date">' + n.date + '</div>' +
+            '<div class="note-url">danielswp.github.io › notes › ' + escapeHtml(n.category || '未分类') + '</div>' +
+            '<div class="note-snippet">' + escapeHtml(n.date) + ' — 点击查看《' + safeTitle + '》的完整内容与实践记录。</div>' +
         '</a></li>';
     }
     fileList.innerHTML = html;
 
     if (totalPages <= 1) { pagination.innerHTML = ''; return; }
-    var pager = '<button ' + (currentPage === 1 ? 'disabled' : '') + ' data-page="' + (currentPage - 1) + '">[&lt;]</button>';
+    var pager = '<button ' + (currentPage === 1 ? 'disabled' : '') + ' data-page="' + (currentPage - 1) + '">‹ 上一页</button>';
     for (var p = 1; p <= totalPages; p++) {
         if (p === 1 || p === totalPages || (p >= currentPage - 1 && p <= currentPage + 1)) {
             pager += '<button class="' + (p === currentPage ? 'active' : '') + '" data-page="' + p + '">' + p + '</button>';
@@ -314,7 +315,7 @@ function renderPage() {
             pager += '<span class="ellipsis">…</span>';
         }
     }
-    pager += '<button ' + (currentPage === totalPages ? 'disabled' : '') + ' data-page="' + (currentPage + 1) + '">[&gt;]</button>';
+    pager += '<button ' + (currentPage === totalPages ? 'disabled' : '') + ' data-page="' + (currentPage + 1) + '">下一页 ›</button>';
     pagination.innerHTML = pager;
 }
 
