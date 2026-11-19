@@ -82,15 +82,20 @@
     function renderPdfs() {
         if (!pdfBooks.length) return '';
         const cards = pdfBooks.map(function (book, i) {
-            return `<button type="button" class="pdf-card" data-index="${i}">
-                <span class="pdf-cover" aria-hidden="true">PDF</span>
-                <span class="pdf-info"><span class="pdf-name">${book.title}</span><span class="pdf-meta">点击在线阅读</span></span>
-                <span class="pdf-arrow" aria-hidden="true">↗</span>
-            </button>`;
+            const url = new URL(book.file, document.baseURI).href;
+            return `<div class="pdf-item">
+                <button type="button" class="pdf-card" data-index="${i}" aria-label="在线阅读：${book.title}">
+                    <span class="pdf-cover" aria-hidden="true">PDF</span>
+                    <span class="pdf-info"><span class="pdf-name">${book.title}</span><span class="pdf-meta">点击阅读 · 可下载</span></span>
+                </button>
+                <a class="pdf-download" href="${url}" download="${book.title}.pdf" aria-label="下载：${book.title}" title="下载到本地">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 20h14v-2H5v2zm7-18v12.17l4.59-4.58L18 10l-6 6-6-6 1.41-1.41L11 14.17V2z"/></svg>
+                </a>
+            </div>`;
         }).join('');
         return `<section class="pdf-section" id="pdfs" aria-label="在线阅读">
             <div class="bookmarks-title">在线阅读</div>
-            <p class="pdf-hint">使用内置 pdf.js 阅读器，在页面中直接翻阅。</p>
+            <p class="pdf-hint">点击卡片在线阅读，点右侧按钮下载；手机流量下建议先下载。</p>
             <div class="pdf-grid">${cards}</div>
         </section>`;
     }
@@ -109,6 +114,7 @@
     <div class="pdf-viewer-inner">
         <div class="pdf-viewer-bar">
             <span class="pdf-viewer-title" id="pdf-viewer-title"></span>
+            <a id="pdf-download" class="pdf-bar-link" download>下载</a>
             <button type="button" id="pdf-new-tab">新窗口打开</button>
             <button type="button" id="pdf-close">关闭</button>
         </div>
@@ -179,13 +185,14 @@
         update();
     }
 
-    // PDF 在线阅读：按需加载 pdf.js 自带阅读器
+    // PDF 在线阅读：点击卡片即打开；下载按钮走浏览器原生下载
     const pdfOverlay = $('pdf-viewer');
     const pdfFrame = $('pdf-frame');
     let currentPdfUrl = '';
     let closePdf = function () {};
     if (pdfOverlay && pdfFrame) {
         const pdfTitle = $('pdf-viewer-title');
+        const pdfDownloadLink = $('pdf-download');
         closePdf = function () {
             pdfOverlay.classList.remove('show');
             document.body.classList.remove('pdf-open');
@@ -205,6 +212,10 @@
             currentPdfUrl = new URL(book.file, document.baseURI).href;
             pdfFrame.src = 'js/pdfjs-6.5.438-dist/web/viewer.html?file=' + encodeURIComponent(currentPdfUrl);
             if (pdfTitle) pdfTitle.textContent = book.title;
+            if (pdfDownloadLink) {
+                pdfDownloadLink.href = currentPdfUrl;
+                pdfDownloadLink.download = book.title + '.pdf';
+            }
             pdfOverlay.classList.add('show');
             document.body.classList.add('pdf-open');
         });
