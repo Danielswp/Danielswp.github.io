@@ -35,3 +35,11 @@ node_modules/
 /public/
 /resources/_gen/
 hugo_stats.json
+
+
+
+.playwright-cli/
+.playwright-cli/
+node_modules/
+test-results/
+playwright-report/

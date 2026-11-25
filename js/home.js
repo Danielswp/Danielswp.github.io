@@ -95,7 +95,7 @@
         }).join('');
         return `<section class="pdf-section" id="pdfs" aria-label="在线阅读">
             <div class="bookmarks-title">在线阅读</div>
-            <p class="pdf-hint">点击卡片在线阅读，点右侧按钮下载；手机流量下建议先下载。</p>
+            <p class="pdf-hint">点卡片阅读（手机端用浏览器原生查看器），点右侧按钮下载到本地。</p>
             <div class="pdf-grid">${cards}</div>
         </section>`;
     }
@@ -210,6 +210,12 @@
             const book = pdfBooks[Number(card.dataset.index)];
             if (!book) return;
             currentPdfUrl = new URL(book.file, document.baseURI).href;
+            const isMobile = window.matchMedia('(pointer: coarse)').matches ||
+                window.matchMedia('(max-width: 768px)').matches;
+            if (isMobile) {
+                window.location.href = currentPdfUrl;
+                return;
+            }
             pdfFrame.src = 'js/pdfjs-6.5.438-dist/web/viewer.html?file=' + encodeURIComponent(currentPdfUrl);
             if (pdfTitle) pdfTitle.textContent = book.title;
             if (pdfDownloadLink) {
